@@ -22,10 +22,14 @@ app.get( '/', ( req, res ) => {
     res.render( 'home' );
 } )
 
-app.get( '/addrestaurant', async ( req, res ) => {
-    const resto = new Restaurant( { title: 'KFC', priceRange: 'Budget' } );
-    await resto.save();
-    res.send( resto );
+app.get( '/restaurants', async ( req, res ) => {
+    const restaurants = await Restaurant.find( {} );
+    res.render( 'restaurants/index', { restaurants } );
+} )
+
+app.get( '/restaurants/:id', async ( req, res ) => {
+    const restaurant = await Restaurant.findById( req.params.id );
+    res.render( 'restaurants/show', { restaurant } );
 } )
 
 app.listen( 3000, () => {
