@@ -65,6 +65,12 @@ app.put( '/restaurants/:id', async ( req, res ) => {
 
 } )
 
+app.delete( '/restaurants/:id', async ( req, res ) => {
+    const { id } = req.params;
+    const restaurant = await Restaurant.findByIdAndDelete( id, { ...req.body.restaurant } );
+    res.redirect( `/restaurants` );
+
+} )
 
 app.listen( 3000, () => {
     console.log( "working and listening :)" );

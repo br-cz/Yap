@@ -11,6 +11,12 @@
 <body>
     <h1>Showing Resto: <%= restaurant.title%>
     </h1>
+    <p>
+    <form action="/restaurants/<%=restaurant._id%>?_method=DELETE" method="POST">
+        <button>Delete</button>
+    </form>
+
+    </p>
     <footer>
         <a href="/restaurants/<%=restaurant._id%>/edit"> Edit </a>
         <a href="/restaurants"> Main </a>
