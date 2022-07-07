@@ -2,7 +2,8 @@ const express = require( 'express' );
 const app = express();
 const path = require( 'path' );
 const mongoose = require( 'mongoose' );
-var methodOverride = require( 'method-override' )
+const methodOverride = require( 'method-override' );
+const ejsMate = require( 'ejs-mate' );
 
 // override with POST having ?_method=PUT
 app.use( methodOverride( '_method' ) )
@@ -22,7 +23,7 @@ db.once( "open", () => {
 //to make sure res.body is not empty
 app.use( express.urlencoded( { extended: true } ) );
 
-
+app.engine( 'ejs', ejsMate );
 app.set( 'view engine', 'ejs' )
 app.set( 'views', path.join( __dirname, 'views' ) )
 

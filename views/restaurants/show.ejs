@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show Restos</title>
-</head>
-
-<body>
+<% layout('layouts/boilerplate') %>
     <h1>Showing Resto: <%= restaurant.title%>
     </h1>
     <p>
@@ -21,6 +11,3 @@
         <a href="/restaurants/<%=restaurant._id%>/edit"> Edit </a>
         <a href="/restaurants"> Main </a>
     </footer>
-</body>
-
-</html>
