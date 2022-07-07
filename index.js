@@ -2,6 +2,10 @@ const express = require( 'express' );
 const app = express();
 const path = require( 'path' );
 const mongoose = require( 'mongoose' );
+var methodOverride = require( 'method-override' )
+
+// override with POST having ?_method=PUT
+app.use( methodOverride( '_method' ) )
 
 const Restaurant = require( './models/restaurant' );
 
@@ -17,6 +21,7 @@ db.once( "open", () => {
 
 //to make sure res.body is not empty
 app.use( express.urlencoded( { extended: true } ) );
+
 
 app.set( 'view engine', 'ejs' )
 app.set( 'views', path.join( __dirname, 'views' ) )
@@ -45,6 +50,19 @@ app.post( '/restaurants', async ( req, res ) => {
 app.get( '/restaurants/:id', async ( req, res ) => {
     const restaurant = await Restaurant.findById( req.params.id );
     res.render( 'restaurants/show', { restaurant } );
+} )
+
+app.get( '/restaurants/:id/edit', async ( req, res ) => {
+    const restaurant = await Restaurant.findById( req.params.id );
+    res.render( 'restaurants/edit', { restaurant } );
+} )
+
+//post request faked as put request
+app.put( '/restaurants/:id', async ( req, res ) => {
+    const { id } = req.params;
+    const restaurant = await Restaurant.findByIdAndUpdate( id, { ...req.body.restaurant } );
+    res.redirect( `/restaurants/${restaurant._id}` );
+
 } )
 
 
