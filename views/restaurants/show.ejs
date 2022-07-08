@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate') %>
-    <h1>Showing Resto: <%= restaurant.title%>
-    </h1>
+    <h1>Showing Resto: <%= restaurant.title%></h1>
+    <img src="<%= restaurant.image %> " alt="">
     <p>
     <form action="/restaurants/<%=restaurant._id%>?_method=DELETE" method="POST">
         <button>Delete</button>
