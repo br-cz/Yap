@@ -1,15 +1,59 @@
 <% layout('layouts/boilerplate') %>
-    <form action="/restaurants" method="POST">
-        <div>
-            <label for="title">Title</label>
-            <input type="text" id="title" name="restaurant[title]">
-        </div>
-        <div>
-            <label for="location">Location</label>
-            <input type="text" id="location" name="restaurant[location]">
-        </div>
-        <button>Add Campground</button>
-    </form>
-    <footer>
-        <a href="/restaurants"> Main </a>
-    </footer>
+<div class="row">
+    <h1 class="text-center">Recommend a Restaurant</h1>
+    <div class="col-md-6 offset-md-3">
+        <form action="/restaurants" method="POST" >
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input class="form-control" type="text" id="title" name="restaurant[title]" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <input class="form-control" type="text" id="location" name="restaurant[location]" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="price">Restaurant Price Range</label>
+                <div class="input-group">
+                    <span class="input-group-text" id="price-label">$</span>
+                    <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
+                        aria-describedby="price-label" name="restaurant[price]" required>
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" type="text" id="description" name="restaurant[description]"
+                    required></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <!-- Allows for custom images to give future visitors a more in depth view of the restaurant -->
+            <div class="mb-3">
+                <div class="form-file custom-file">
+                    <input type="file" class="form-file-input" id="image" name="image" multiple>
+                    <label class="form-file-label" for="image">
+                        <span class="form-file-text custom-file-label">Choose image(s)...</span>
+                        <span class="form-file-button">Browse</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <button class="btn btn-success">Recommend!</button>
+            </div>
+        </form>
+        <a href="/restaurant">All Featured Restaurants</a>
+    </div>
+</div>
