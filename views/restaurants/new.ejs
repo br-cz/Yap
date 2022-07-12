@@ -2,19 +2,19 @@
 <div class="row">
     <h1 class="text-center">Recommend a Restaurant</h1>
     <div class="col-md-6 offset-md-3">
-        <form action="/restaurants" method="POST" >
+        <form action="/restaurants" method="POST" novalidate class="needs-validation" >
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" type="text" id="title" name="restaurant[title]" required>
                 <div class="valid-feedback">
-                    Looks good!
+                    Sounds cool!
                 </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="location">Location</label>
                 <input class="form-control" type="text" id="location" name="restaurant[location]" required>
                 <div class="valid-feedback">
-                    Looks good!
+                    I've always wanted to go there!
                 </div>
             </div>
 
@@ -25,9 +25,6 @@
                     <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
                         aria-describedby="price-label" name="restaurant[price]" required>
                 </div>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
             </div>
 
             <div class="mb-3">
@@ -35,7 +32,7 @@
                 <textarea class="form-control" type="text" id="description" name="restaurant[description]"
                     required></textarea>
                 <div class="valid-feedback">
-                    Looks good!
+                    Ooh yummy
                 </div>
             </div>
 
@@ -49,7 +46,6 @@
                     </label>
                 </div>
             </div>
-            
             <div class="mb-3">
                 <button class="btn btn-success">Recommend!</button>
             </div>
@@ -57,3 +53,27 @@
         <a href="/restaurant">All Featured Restaurants</a>
     </div>
 </div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+    'use strict'
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    // Note: "needs-validation" is the class defined in the form
+    const forms = document.querySelectorAll('.needs-validation')
+
+    // Loop over them and prevent submission
+    Array.from(forms)
+        .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+        }, false)
+        })
+    })()
+</script>

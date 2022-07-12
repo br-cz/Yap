@@ -22,6 +22,31 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
             integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
             crossorigin="anonymous"></script>
+
+            <script>
+                // Example starter JavaScript for disabling form submissions if there are invalid fields
+                (function () {
+                'use strict'
+            
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                // Note: "needs-validation" is the class defined in the form
+                const forms = document.querySelectorAll('.needs-validation')
+            
+                // Loop over them and prevent submission
+                Array.from(forms)
+                    .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                        }
+            
+                        form.classList.add('was-validated')
+                    }, false)
+                    })
+                })()
+            </script> 
+
     <%-include('../partials/footer')%>
 </body>
 

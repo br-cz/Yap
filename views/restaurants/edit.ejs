@@ -3,13 +3,13 @@
 <div class="row">
     <h1 class="text-center">Edit Restaurant</h1>
     <div class="col-md-6 offset-md-3">
-        <form action="/restaurant/<%=restaurant._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+        <form action="/restaurants/<%=restaurant._id%>?_method=PUT" method="POST" novalidate class="needs-validation">
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" type="text" id="title" name="restaurant[title]"
                     value="<%=restaurant.title %>" required>
                 <div class="valid-feedback">
-                    Looks good!
+                    Sounds better!
                 </div>
             </div>
 
@@ -18,7 +18,7 @@
                 <input class="form-control" type="text" id="location" name="restaurant[location]"
                     value="<%=restaurant.location %>" required>
                 <div class="valid-feedback">
-                    Looks good!
+                    How's the new place?
                 </div>
             </div>
 
@@ -29,9 +29,6 @@
                     <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
                         aria-describedby="price-label" name="restaurant[price]" value="<%=restaurant.price %>"
                         required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
                 </div>
             </div>
 
@@ -40,7 +37,7 @@
                 <textarea class="form-control" type="text" id="description" name="restaurant[description]"
                     required><%= restaurant.description%></textarea>
                 <div class="valid-feedback">
-                    Looks good!
+                    Even better!
                 </div>
             </div>
 
