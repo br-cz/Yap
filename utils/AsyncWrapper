@@ -1,0 +1,7 @@
+module.exports = func => {
+    //Returns a function that accepts the given function and runs it, further
+    //it catches the error and passes it unto next
+    return(req, res, next) => {
+        func(req,res, next).catch(next);
+    }
+}

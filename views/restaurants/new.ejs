@@ -19,11 +19,11 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="price">Restaurant Price Range</label>
+                <label class="form-label" for="priceRange">Restaurant Price Range</label>
                 <div class="input-group">
                     <span class="input-group-text" id="price-label">$</span>
-                    <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
-                        aria-describedby="price-label" name="restaurant[price]" required>
+                    <input type="text" class="form-control" id="priceRange" placeholder="0.00" aria-label="priceRange"
+                        aria-describedby="price-label" name="restaurant[priceRange]" required>
                 </div>
             </div>
 
@@ -54,26 +54,3 @@
     </div>
 </div>
 
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
-    'use strict'
-
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    // Note: "needs-validation" is the class defined in the form
-    const forms = document.querySelectorAll('.needs-validation')
-
-    // Loop over them and prevent submission
-    Array.from(forms)
-        .forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-            }
-
-            form.classList.add('was-validated')
-        }, false)
-        })
-    })()
-</script>

@@ -4,6 +4,8 @@ const path = require( 'path' );
 const mongoose = require( 'mongoose' );
 const methodOverride = require( 'method-override' );
 const ejsMate = require( 'ejs-mate' );
+const asyncWrapper = require('./utils/AsyncWrapper');
+const ExpressError = require('./utils/ExpressError');
 
 // override with POST having ?_method=PUT
 app.use( methodOverride( '_method' ) )
@@ -23,12 +25,18 @@ db.once( "open", () => {
 //to make sure res.body is not empty
 app.use( express.urlencoded( { extended: true } ) );
 
+app.use( express.static( "public" ) );
+
 app.engine( 'ejs', ejsMate );
 app.set( 'view engine', 'ejs' )
 app.set( 'views', path.join( __dirname, 'views' ) )
 
 app.get( '/', ( req, res ) => {
     res.render( 'home' );
+} )
+
+app.get( '/error', ( req, res ) => {
+    res.render( 'error' );
 } )
 
 app.get( '/restaurants', async ( req, res ) => {
@@ -41,37 +49,49 @@ app.get( '/restaurants/new', ( req, res ) => {
     res.render( 'restaurants/new' );
 } );
 
-app.post( '/restaurants', async ( req, res ) => {
+app.post( '/restaurants', asyncWrapper( async ( req, res, next ) => {
     const restaurant = new Restaurant( req.body.restaurant );
     await restaurant.save();
     res.redirect( `/restaurants/${restaurant._id}` );
     //res.send( req.body );
-} )
+} ))
 
-app.get( '/restaurants/:id', async ( req, res ) => {
+app.get( '/restaurants/:id', asyncWrapper(async ( req, res ) => {
     const restaurant = await Restaurant.findById( req.params.id );
     res.render( 'restaurants/show', { restaurant } );
-} )
+} ))
 
-app.get( '/restaurants/:id/edit', async ( req, res ) => {
+app.get( '/restaurants/:id/edit', asyncWrapper(async ( req, res ) => {
     const restaurant = await Restaurant.findById( req.params.id );
     res.render( 'restaurants/edit', { restaurant } );
-} )
+} ))
 
 //post request faked as put request
-app.put( '/restaurants/:id', async ( req, res ) => {
+app.put( '/restaurants/:id', asyncWrapper(async ( req, res, next) => {
     const { id } = req.params;
     const restaurant = await Restaurant.findByIdAndUpdate( id, { ...req.body.restaurant } );
     res.redirect( `/restaurants/${restaurant._id}` );
+} ))
 
-} )
-
-app.delete( '/restaurants/:id', async ( req, res ) => {
+app.delete( '/restaurants/:id', asyncWrapper(async ( req, res ) => {
     const { id } = req.params;
     const restaurant = await Restaurant.findByIdAndDelete( id, { ...req.body.restaurant } );
     res.redirect( `/restaurants` );
+} ))
 
-} )
+//'*' means for every path
+app.all('*', (req, res, next)=>{
+    next(new ExpressError('Page Not Found', 404));
+})
+
+app.use((err, req, res, next) => {
+    //Default code and message are arbitrary
+    const {statusCode = 500} = err;
+
+    if(!err.message) err.message = 'Oops Error!';
+
+    res.status(statusCode).render('error', { err });
+})
 
 app.listen( 3000, () => {
     console.log( "working and listening :)" );
