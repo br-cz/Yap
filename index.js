@@ -6,7 +6,7 @@ const methodOverride = require( 'method-override' );
 const ejsMate = require( 'ejs-mate' );
 const asyncWrapper = require('./utils/AsyncWrapper');
 const ExpressError = require('./utils/ExpressError');
-const Joi = require('joi');
+const {restaurantSchema} = require('./schemas.js')
 
 // override with POST having ?_method=PUT
 app.use( methodOverride( '_method' ) )
@@ -32,6 +32,19 @@ app.engine( 'ejs', ejsMate );
 app.set( 'view engine', 'ejs' )
 app.set( 'views', path.join( __dirname, 'views' ) )
 
+
+const validateSchema = (req, res, next) => {
+    const { error } = restaurantSchema.validate(req.body);
+    if(error){
+        const message = error.details.map(el => el.message).join(',');
+        throw new ExpressError(message, 400);
+    }
+    else{
+        next();
+    }
+}
+
+
 app.get( '/', ( req, res ) => {
     res.render( 'home' );
 } )
@@ -50,22 +63,7 @@ app.get( '/restaurants/new', ( req, res ) => {
     res.render( 'restaurants/new' );
 } );
 
-app.post( '/restaurants', asyncWrapper( async ( req, res, next ) => {
-    const restaurantSchema = Joi.object({
-        restaurant: Joi.object({
-            title: Joi.string().required(),
-            priceRange: Joi.number().required().min(0),
-            description: Joi.string().required(),
-            location: Joi.string().required(),
-        }).required()
-    })
-    const { error } = restaurantSchema.validate(req.body);
-    if(error){
-        const message = error.details.map(el => el.message).join(',');
-        throw new ExpressError(message, 400);
-    }
-
-
+app.post( '/restaurants', validateSchema, asyncWrapper( async ( req, res, next ) => {
     const restaurant = new Restaurant( req.body.restaurant );
     await restaurant.save();
     res.redirect( `/restaurants/${restaurant._id}` );
@@ -83,7 +81,7 @@ app.get( '/restaurants/:id/edit', asyncWrapper(async ( req, res ) => {
 } ))
 
 //post request faked as put request
-app.put( '/restaurants/:id', asyncWrapper(async ( req, res, next) => {
+app.put( '/restaurants/:id', validateSchema, asyncWrapper(async ( req, res, next) => {
     const { id } = req.params;
     const restaurant = await Restaurant.findByIdAndUpdate( id, { ...req.body.restaurant } );
     res.redirect( `/restaurants/${restaurant._id}` );
