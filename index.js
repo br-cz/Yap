@@ -6,6 +6,7 @@ const methodOverride = require( 'method-override' );
 const ejsMate = require( 'ejs-mate' );
 const asyncWrapper = require('./utils/AsyncWrapper');
 const ExpressError = require('./utils/ExpressError');
+const Joi = require('joi');
 
 // override with POST having ?_method=PUT
 app.use( methodOverride( '_method' ) )
@@ -50,10 +51,25 @@ app.get( '/restaurants/new', ( req, res ) => {
 } );
 
 app.post( '/restaurants', asyncWrapper( async ( req, res, next ) => {
+    const restaurantSchema = Joi.object({
+        restaurant: Joi.object({
+            title: Joi.string().required(),
+            priceRange: Joi.number().required().min(0),
+            description: Joi.string().required(),
+            location: Joi.string().required(),
+        }).required()
+    })
+    const { error } = restaurantSchema.validate(req.body);
+    if(error){
+        const message = error.details.map(el => el.message).join(',');
+        throw new ExpressError(message, 400);
+    }
+
+
     const restaurant = new Restaurant( req.body.restaurant );
     await restaurant.save();
     res.redirect( `/restaurants/${restaurant._id}` );
-    //res.send( req.body );
+
 } ))
 
 app.get( '/restaurants/:id', asyncWrapper(async ( req, res ) => {
