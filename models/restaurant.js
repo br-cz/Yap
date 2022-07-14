@@ -6,7 +6,14 @@ const RestaurantSchema = new Schema( {
     image: String,
     priceRange: Number,
     description: String,
-    location: String
+    location: String,
+    //1-to-Many relationship 
+    reviews:[
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ]
 } );
 
 //Restaurant becomes restaurants in the mongo collection
