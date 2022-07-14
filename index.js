@@ -44,7 +44,6 @@ const validateSchema = (req, res, next) => {
     }
 }
 
-
 app.get( '/', ( req, res ) => {
     res.render( 'home' );
 } )
@@ -92,6 +91,10 @@ app.delete( '/restaurants/:id', asyncWrapper(async ( req, res ) => {
     const restaurant = await Restaurant.findByIdAndDelete( id, { ...req.body.restaurant } );
     res.redirect( `/restaurants` );
 } ))
+
+app.post('/restaurants/:id/reviews', asyncWrapper(async(req,res) =>{
+    res.send('Working');
+}))
 
 //'*' means for every path
 app.all('*', (req, res, next)=>{
