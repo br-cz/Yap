@@ -1,4 +1,5 @@
 const mongoose = require( 'mongoose' );
+const Review = require('./review');
 const Schema = mongoose.Schema; //used to shorten mongoose.Schema types
 
 const RestaurantSchema = new Schema( {
@@ -15,6 +16,18 @@ const RestaurantSchema = new Schema( {
         }
     ]
 } );
+
+RestaurantSchema.post('findOneAndDelete', async function (doc){
+    if(doc){
+        //Generic deletion
+        await Review.deleteMany({
+            //the id of the review to be removed is in the doc reviews
+            _id:{
+                $in: doc.reviews
+            }
+        })
+    }
+})
 
 //Restaurant becomes restaurants in the mongo collection
 module.exports = mongoose.model( 'Restaurant', RestaurantSchema );

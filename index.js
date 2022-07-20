@@ -117,6 +117,17 @@ app.post('/restaurants/:id/reviews', validateReview, asyncWrapper(async(req,res)
     res.redirect(`/restaurants/${restaurant._id}`);
 }))
 
+//Need reviewId to remove the reference of the review in the restaurant and the review itself
+app.delete('/restaurants/:id/reviews/:reviewId', asyncWrapper(async(req,res) =>{
+    const {id, reviewId} = req.params;
+
+    await Restaurant.findByIdAndUpdate(id, { $pull: {reviews: reviewId}});
+
+    await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/restaurants/${id}`);
+}))
+
 //'*' means for every path
 app.all('*', (req, res, next)=>{
     next(new ExpressError('Page Not Found', 404));
