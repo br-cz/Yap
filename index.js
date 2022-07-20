@@ -83,7 +83,9 @@ app.post( '/restaurants', validateRestaurant, asyncWrapper( async ( req, res, ne
 } ))
 
 app.get( '/restaurants/:id', asyncWrapper(async ( req, res ) => {
-    const restaurant = await Restaurant.findById( req.params.id );
+    //Populate will automatically replace the specified path in the document, with document(s) from other collection(s),
+    //which is what we need to display its fields, body and rating
+    const restaurant = await Restaurant.findById( req.params.id ).populate('reviews');
     res.render( 'restaurants/show', { restaurant } );
 } ))
 
@@ -94,7 +96,7 @@ app.get( '/restaurants/:id/edit', asyncWrapper(async ( req, res ) => {
 
 //post request faked as put request
 app.put( '/restaurants/:id', validateRestaurant, asyncWrapper(async ( req, res, next) => {
-    const { id } = req.params;
+    const { id } = req.params; 
     const restaurant = await Restaurant.findByIdAndUpdate( id, { ...req.body.restaurant } );
     res.redirect( `/restaurants/${restaurant._id}` );
 } ))

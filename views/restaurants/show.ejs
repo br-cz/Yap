@@ -45,6 +45,12 @@
                 </div>
                 <button class="btn btn-success">Submit Review</button>
             </form>
+            <% for(let review of restaurant.reviews) { %>
+            <div class="mb-3">
+                <p>Review: <%= review.body %> </p>
+                <p>Rating: <%= review.rating %></p>
+            </div>
+            <% } %> 
         </div>
     </div>
 
