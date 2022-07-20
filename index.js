@@ -6,7 +6,8 @@ const methodOverride = require( 'method-override' );
 const ejsMate = require( 'ejs-mate' );
 const asyncWrapper = require('./utils/AsyncWrapper');
 const ExpressError = require('./utils/ExpressError');
-const {restaurantSchema} = require('./schemas.js')
+const {restaurantSchema} = require('./schemas.js');
+const Review = require('./models/review');
 
 // override with POST having ?_method=PUT
 app.use( methodOverride( '_method' ) )
@@ -93,7 +94,13 @@ app.delete( '/restaurants/:id', asyncWrapper(async ( req, res ) => {
 } ))
 
 app.post('/restaurants/:id/reviews', asyncWrapper(async(req,res) =>{
-    res.send('Working');
+    const restaurant = await Restaurant.findById(req.params.id);
+    const review = new Review(req.body.review);
+    restaurant.reviews.push(review);
+    //we can do this in parallel 
+    await review.save();
+    await restaurant.save();
+    res.redirect(`/restaurants/${restaurant._id}`);
 }))
 
 //'*' means for every path
