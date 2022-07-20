@@ -6,7 +6,7 @@ const methodOverride = require( 'method-override' );
 const ejsMate = require( 'ejs-mate' );
 const asyncWrapper = require('./utils/AsyncWrapper');
 const ExpressError = require('./utils/ExpressError');
-const {restaurantSchema} = require('./schemas.js');
+const {restaurantSchema, reviewSchema} = require('./schemas.js');
 const Review = require('./models/review');
 
 // override with POST having ?_method=PUT
@@ -34,8 +34,20 @@ app.set( 'view engine', 'ejs' )
 app.set( 'views', path.join( __dirname, 'views' ) )
 
 
-const validateSchema = (req, res, next) => {
+const validateRestaurant = (req, res, next) => {
     const { error } = restaurantSchema.validate(req.body);
+    if(error){
+        const message = error.details.map(el => el.message).join(',');
+        throw new ExpressError(message, 400);
+    }
+    else{
+        next();
+    }
+}
+
+//can make this method modular
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
     if(error){
         const message = error.details.map(el => el.message).join(',');
         throw new ExpressError(message, 400);
@@ -63,7 +75,7 @@ app.get( '/restaurants/new', ( req, res ) => {
     res.render( 'restaurants/new' );
 } );
 
-app.post( '/restaurants', validateSchema, asyncWrapper( async ( req, res, next ) => {
+app.post( '/restaurants', validateRestaurant, asyncWrapper( async ( req, res, next ) => {
     const restaurant = new Restaurant( req.body.restaurant );
     await restaurant.save();
     res.redirect( `/restaurants/${restaurant._id}` );
@@ -81,7 +93,7 @@ app.get( '/restaurants/:id/edit', asyncWrapper(async ( req, res ) => {
 } ))
 
 //post request faked as put request
-app.put( '/restaurants/:id', validateSchema, asyncWrapper(async ( req, res, next) => {
+app.put( '/restaurants/:id', validateRestaurant, asyncWrapper(async ( req, res, next) => {
     const { id } = req.params;
     const restaurant = await Restaurant.findByIdAndUpdate( id, { ...req.body.restaurant } );
     res.redirect( `/restaurants/${restaurant._id}` );
@@ -93,7 +105,7 @@ app.delete( '/restaurants/:id', asyncWrapper(async ( req, res ) => {
     res.redirect( `/restaurants` );
 } ))
 
-app.post('/restaurants/:id/reviews', asyncWrapper(async(req,res) =>{
+app.post('/restaurants/:id/reviews', validateReview, asyncWrapper(async(req,res) =>{
     const restaurant = await Restaurant.findById(req.params.id);
     const review = new Review(req.body.review);
     restaurant.reviews.push(review);

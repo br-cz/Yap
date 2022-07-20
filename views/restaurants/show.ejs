@@ -31,15 +31,17 @@
                 </div>
             </div>
             <h2>Feel free to leave a review!</h2>
-
-            <form action="/restaurants/<%=restaurant._id%>/reviews" method="POST" class="mb-3">
+            <form action="/restaurants/<%=restaurant._id%>/reviews" method="POST" class="mb-3 needs-validation" novalidate>
                 <div class="mb-3">
                     <label class="form-label" for="rating">Rating:</label>
                     <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="body">Review:</label>
-                    <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3"></textarea>
+                    <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
+                    <div class="valid-feedback">
+                        Cool!
+                    </div>
                 </div>
                 <button class="btn btn-success">Submit Review</button>
             </form>
