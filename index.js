@@ -4,13 +4,11 @@ const path = require( 'path' );
 const mongoose = require( 'mongoose' );
 const methodOverride = require( 'method-override' );
 const ejsMate = require( 'ejs-mate' );
-const asyncWrapper = require('./utils/AsyncWrapper');
 const ExpressError = require('./utils/ExpressError');
-const {restaurantSchema, reviewSchema} = require('./schemas.js');
-const Restaurant = require('./models/restaurant');
-const Review = require('./models/review');
 
 const restaurants = require('./routes/restaurants');
+const reviews = require('./routes/reviews');
+
 
 // override with POST having ?_method=PUT
 app.use( methodOverride( '_method' ) )
@@ -28,6 +26,7 @@ db.once( "open", () => {
 //to make sure res.body is not empty
 app.use( express.urlencoded( { extended: true } ) );
 
+//allows usage of static assets in the specified folder, "public" is most commonly used
 app.use( express.static( "public" ) );
 
 app.engine( 'ejs', ejsMate );
@@ -35,19 +34,9 @@ app.set( 'view engine', 'ejs' )
 app.set( 'views', path.join( __dirname, 'views' ) )
 
 
-//can make this method modular
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if(error){
-        const message = error.details.map(el => el.message).join(',');
-        throw new ExpressError(message, 400);
-    }
-    else{
-        next();
-    }
-}
-
 app.use('/restaurants', restaurants)
+app.use('/restaurants/:id/reviews', reviews)
+
 
 app.get( '/', ( req, res ) => {
     res.render( 'home' );
@@ -57,28 +46,6 @@ app.get( '/error', ( req, res ) => {
     res.render( 'error' );
 } )
 
-
-
-app.post('/restaurants/:id/reviews', validateReview, asyncWrapper(async(req,res) =>{
-    const restaurant = await Restaurant.findById(req.params.id);
-    const review = new Review(req.body.review);
-    restaurant.reviews.push(review);
-    //we can do this in parallel 
-    await review.save();
-    await restaurant.save();
-    res.redirect(`/restaurants/${restaurant._id}`);
-}))
-
-//Need reviewId to remove the reference of the review in the restaurant and the review itself
-app.delete('/restaurants/:id/reviews/:reviewId', asyncWrapper(async(req,res) =>{
-    const {id, reviewId} = req.params;
-
-    await Restaurant.findByIdAndUpdate(id, { $pull: {reviews: reviewId}} );
-
-    await Review.findByIdAndDelete(reviewId);
-
-    res.redirect(`/restaurants/${id}`);
-}))
 
 //'*' means for every path
 app.all('*', (req, res, next)=>{
