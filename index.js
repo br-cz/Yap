@@ -7,12 +7,13 @@ const ejsMate = require( 'ejs-mate' );
 const asyncWrapper = require('./utils/AsyncWrapper');
 const ExpressError = require('./utils/ExpressError');
 const {restaurantSchema, reviewSchema} = require('./schemas.js');
+const Restaurant = require('./models/restaurant');
 const Review = require('./models/review');
+
+const restaurants = require('./routes/restaurants');
 
 // override with POST having ?_method=PUT
 app.use( methodOverride( '_method' ) )
-
-const Restaurant = require( './models/restaurant' );
 
 //here yap-restaurant is our temp db
 mongoose.connect( 'mongodb://localhost:27017/yap-restaurants' )
@@ -34,17 +35,6 @@ app.set( 'view engine', 'ejs' )
 app.set( 'views', path.join( __dirname, 'views' ) )
 
 
-const validateRestaurant = (req, res, next) => {
-    const { error } = restaurantSchema.validate(req.body);
-    if(error){
-        const message = error.details.map(el => el.message).join(',');
-        throw new ExpressError(message, 400);
-    }
-    else{
-        next();
-    }
-}
-
 //can make this method modular
 const validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
@@ -57,6 +47,8 @@ const validateReview = (req, res, next) => {
     }
 }
 
+app.use('/restaurants', restaurants)
+
 app.get( '/', ( req, res ) => {
     res.render( 'home' );
 } )
@@ -65,47 +57,7 @@ app.get( '/error', ( req, res ) => {
     res.render( 'error' );
 } )
 
-app.get( '/restaurants', async ( req, res ) => {
-    const restaurants = await Restaurant.find( {} );
-    res.render( 'restaurants/index', { restaurants } );
-} )
 
-//must be above id because if not, the route will try to find a restaurant with id of "new"
-app.get( '/restaurants/new', ( req, res ) => {
-    res.render( 'restaurants/new' );
-} );
-
-app.post( '/restaurants', validateRestaurant, asyncWrapper( async ( req, res, next ) => {
-    const restaurant = new Restaurant( req.body.restaurant );
-    await restaurant.save();
-    res.redirect( `/restaurants/${restaurant._id}` );
-
-} ))
-
-app.get( '/restaurants/:id', asyncWrapper(async ( req, res ) => {
-    //Populate will automatically replace the specified path in the document, with document(s) from other collection(s),
-    //which is what we need to display its fields, body and rating
-    const restaurant = await Restaurant.findById( req.params.id ).populate('reviews');
-    res.render( 'restaurants/show', { restaurant } );
-} ))
-
-app.get( '/restaurants/:id/edit', asyncWrapper(async ( req, res ) => {
-    const restaurant = await Restaurant.findById( req.params.id );
-    res.render( 'restaurants/edit', { restaurant } );
-} ))
-
-//post request faked as put request
-app.put( '/restaurants/:id', validateRestaurant, asyncWrapper(async ( req, res, next) => {
-    const { id } = req.params; 
-    const restaurant = await Restaurant.findByIdAndUpdate( id, { ...req.body.restaurant } );
-    res.redirect( `/restaurants/${restaurant._id}` );
-} ))
-
-app.delete( '/restaurants/:id', asyncWrapper(async ( req, res ) => {
-    const { id } = req.params;
-    const restaurant = await Restaurant.findByIdAndDelete( id, { ...req.body.restaurant } );
-    res.redirect( `/restaurants` );
-} ))
 
 app.post('/restaurants/:id/reviews', validateReview, asyncWrapper(async(req,res) =>{
     const restaurant = await Restaurant.findById(req.params.id);
@@ -121,7 +73,7 @@ app.post('/restaurants/:id/reviews', validateReview, asyncWrapper(async(req,res)
 app.delete('/restaurants/:id/reviews/:reviewId', asyncWrapper(async(req,res) =>{
     const {id, reviewId} = req.params;
 
-    await Restaurant.findByIdAndUpdate(id, { $pull: {reviews: reviewId}});
+    await Restaurant.findByIdAndUpdate(id, { $pull: {reviews: reviewId}} );
 
     await Review.findByIdAndDelete(reviewId);
 
