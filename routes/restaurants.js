@@ -29,6 +29,7 @@ router.get( '/new', ( req, res ) => {
 router.post( '', validateRestaurant, asyncWrapper( async ( req, res, next ) => {
     const restaurant = new Restaurant( req.body.restaurant );
     await restaurant.save();
+    req.flash('success', 'Successfully made a new restaurant!')
     res.redirect( `/restaurants/${restaurant._id}` );
 
 } ))
@@ -37,7 +38,7 @@ router.get( '/:id', asyncWrapper(async ( req, res ) => {
     //Populate will automatically replace the specified path in the document, with document(s) from other collection(s),
     //which is what we need to display its fields, body and rating
     const restaurant = await Restaurant.findById( req.params.id ).populate('reviews');
-    res.render( 'restaurants/show', { restaurant } );
+    res.render( 'restaurants/show', { restaurant, msg: req.flash("success")} );
 } ))
 
 router.get( '/:id/edit', asyncWrapper(async ( req, res ) => {
@@ -55,6 +56,7 @@ router.put( '/:id', validateRestaurant, asyncWrapper(async ( req, res, next) => 
 router.delete( '/:id', asyncWrapper(async ( req, res ) => {
     const { id } = req.params;
     const restaurant = await Restaurant.findByIdAndDelete( id);
+    req.flash('success', 'Successfully deleted the restaurant!')
     res.redirect( `/restaurants` );
 } ))
 
