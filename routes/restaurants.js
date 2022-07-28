@@ -38,11 +38,19 @@ router.get( '/:id', asyncWrapper(async ( req, res ) => {
     //Populate will automatically replace the specified path in the document, with document(s) from other collection(s),
     //which is what we need to display its fields, body and rating
     const restaurant = await Restaurant.findById( req.params.id ).populate('reviews');
+    if(!restaurant){
+        req.flash('error', 'Restaurant not found!');
+        return res.redirect('/restaurants');
+    }
     res.render( 'restaurants/show', { restaurant, msg: req.flash("success")} );
 } ))
 
 router.get( '/:id/edit', asyncWrapper(async ( req, res ) => {
     const restaurant = await Restaurant.findById( req.params.id );
+    if(!restaurant){
+        req.flash('error', 'Restaurant not found!');
+        return res.redirect('/restaurants');
+    }
     res.render( 'restaurants/edit', { restaurant } );
 } ))
 

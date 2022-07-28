@@ -63,6 +63,17 @@ app.use((req, res, next) => {
 app.use('/restaurants', restaurants)
 app.use('/restaurants/:id/reviews', reviews)
 
+app.use((err, req, res, next)=>{
+    const {statusCode = 500} = err;
+
+    if(err){
+        req.flash('error', "Restaurant not found!");
+        return res.redirect(`/restaurants`);
+    }
+
+    if(!err.message) err.message = "Something went wrong!";
+    res.status(statusCode).render('error',{err});
+})
 
 app.get( '/', ( req, res ) => {
     res.render( 'home' );

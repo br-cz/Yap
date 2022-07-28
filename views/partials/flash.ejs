@@ -11,3 +11,18 @@
 </div>
 <% } %>
 
+<!-- only want this to show up if the action has actually succeeded -->
+<!-- measures length because success is an array and length is truthy -->
+<% if(error && error.length) { %> 
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">   
+        <%= error %> 
+        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+            <!-- <span aria-hidden="true">&times;</span> -->
+            <span aria-hidden="true"></span>
+    
+        </button>
+    </div>
+<% } %>
+    
+    
+
