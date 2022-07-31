@@ -9,7 +9,7 @@ const {reviewSchema} = require('../schemas.js');
 const Restaurant = require('../models/restaurant');
 const Review = require('../models/review');
 
-const {isLoggedIn, validateReview} = require('../middleware.js')
+const {isLoggedIn, isReviewAuthor, validateReview} = require('../middleware.js')
 
 router.post('/', isLoggedIn, validateReview, asyncWrapper(async(req,res) =>{
     const restaurant = await Restaurant.findById(req.params.id);
@@ -23,8 +23,9 @@ router.post('/', isLoggedIn, validateReview, asyncWrapper(async(req,res) =>{
     res.redirect(`/restaurants/${restaurant._id}`);
 }))
 
+
 //Need reviewId to remove the reference of the review in the restaurant and the review itself
-router.delete('/:reviewId', asyncWrapper(async(req,res) =>{
+router.delete('/:reviewId', isLoggedIn, isReviewAuthor, asyncWrapper(async(req,res) =>{
     const {id, reviewId} = req.params;
 
     await Restaurant.findByIdAndUpdate(id, { $pull: {reviews: reviewId}} );

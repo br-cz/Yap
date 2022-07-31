@@ -1,6 +1,8 @@
 const {restaurantSchema, reviewSchema} = require('./schemas.js');
 const ExpressError = require('./utils/ExpressError');
-const Restaurant = require('./models/restaurant')
+const Restaurant = require('./models/restaurant');
+const Review = require('./models/review')
+
 
 
 
@@ -18,6 +20,17 @@ module.exports.isAuthor = async(req, res, next) => {
     const { id } = req.params; 
     const restaurant = await Restaurant.findById(id);
     if(!restaurant.author.equals(req.user._id)){
+        req.flash('error', 'Missing permission');
+        return res.redirect( `/restaurants/${id}` );
+    }
+    next();
+}
+
+//blocks delete request incase someone bypasses delete button and uses the delete route
+module.exports.isReviewAuthor = async(req, res, next) => {
+    const { id, reviewId } = req.params; 
+    const review = await Review.findById(reviewId);
+    if(!review.author.equals(req.user._id)){
         req.flash('error', 'Missing permission');
         return res.redirect( `/restaurants/${id}` );
     }

@@ -60,9 +60,12 @@
                     <div class="card-footer text-muted">
                         Reviewed by <%= review.author.username%>
                     </div>
+                 
+                    <!-- <% if (currentUser && review.author.equals(currentUser)) {%>  -->
                     <form action="/restaurants/<%=restaurant._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
                         <button class="btn btn-sm btn-danger">Delete</button>
                     </form>
+                    <!-- <% } %>  -->
                 </div>
             </div>
             <% } %>
