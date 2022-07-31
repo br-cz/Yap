@@ -89,6 +89,7 @@ passport.deserializeUser(User.deserializeUser());
 //session(sessionConfig)) must be above this
 //middleware for success flash flag
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
     //allows the flash to be used locally on every single request
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
