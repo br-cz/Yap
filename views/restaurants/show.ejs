@@ -16,21 +16,20 @@
                     <li class="list-group-item text-muted">
                         <%= restaurant.location%>
                     </li>
-                    <li class="list-group-item text-muted">
-                        Posted by <%= restaurant.author.username%>
-                    </li>
                     <li class="list-group-item">$<%= restaurant.priceRange%>/night</li>
                 </ul>
+
+                <% if (currentUser && restaurant.author.equals(currentUser)) {%> 
                 <div class="card-body">
                     <a class="card-link btn btn-info" href="/restaurants/<%=restaurant._id%>/edit">Edit</a>
                     <form class="d-inline" action="/restaurants/<%=restaurant._id%>?_method=DELETE" method="POST">
                         <button class="btn btn-danger">Delete</button>
                     </form>
                     <a class="card-link btn btn-primary" href="/restaurants">See All Restaurants</a>
-
                 </div>
+                <% } %> 
                 <div class="card-footer text-muted">
-                    Added by Qtip
+                    Posted by <%= restaurant.author.username%>
                 </div>
             </div>
         </div>
