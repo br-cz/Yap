@@ -8,6 +8,12 @@ const RestaurantSchema = new Schema( {
     priceRange: Number,
     description: String,
     location: String,
+    author: 
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ,
     //1-to-Many relationship 
     reviews:[
         {

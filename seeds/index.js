@@ -23,7 +23,7 @@ const seedDB = async () => {
         const priceRange =  Math.floor( Math.random() * 200 )+ 10;
         const resto = new Restaurant( {
             //YOUR USER ID
-            author: '5f5c330c2cd79d538f2c66d9',
+            author: '62e5f30c37b823c492e741bc',
             //gives us some random description from seedHelpers
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample( descriptors )} ${sample( places )}`,

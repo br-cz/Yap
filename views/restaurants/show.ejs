@@ -16,6 +16,9 @@
                     <li class="list-group-item text-muted">
                         <%= restaurant.location%>
                     </li>
+                    <li class="list-group-item text-muted">
+                        Posted by <%= restaurant.author.username%>
+                    </li>
                     <li class="list-group-item">$<%= restaurant.priceRange%>/night</li>
                 </ul>
                 <div class="card-body">
