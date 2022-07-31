@@ -32,9 +32,11 @@ router.get('/login', (req, res) => {
     res.render('users/login');
 });
 
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login'}), (req, res) => {
+router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login', keepSessionInfo: true}), (req, res) => {
     req.flash('success', 'Nice to see you again!');
-    res.redirect('/restaurants');
+    const redirectUrl = req.session.prevUrl || '/restaurants'; //Allows for better user experience redirecting back to their previous page
+    delete req.session.prevUrl; //we don't need this anymore
+    res.redirect(redirectUrl);
 });
 
 router.get('/logout', (req, res, next) => {
