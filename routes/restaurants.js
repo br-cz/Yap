@@ -4,6 +4,7 @@ const asyncWrapper = require('../utils/AsyncWrapper');
 const ExpressError = require('../utils/ExpressError');
 const Restaurant = require('../models/restaurant');
 const {restaurantSchema} = require('../schemas.js');
+const {isLoggedIn} = require('../middleware.js');
 
 const validateRestaurant = (req, res, next) => {
     const { error } = restaurantSchema.validate(req.body);
@@ -22,11 +23,11 @@ router.get( '/', async ( req, res ) => {
 } )
 
 //must be above id because if not, the route will try to find a restaurant with id of "new"
-router.get( '/new', ( req, res ) => {
+router.get( '/new', isLoggedIn, ( req, res ) => {
     res.render( 'restaurants/new' );
 } );
 
-router.post( '', validateRestaurant, asyncWrapper( async ( req, res, next ) => {
+router.post( '/', isLoggedIn, validateRestaurant, asyncWrapper( async ( req, res, next ) => {
     const restaurant = new Restaurant( req.body.restaurant );
     await restaurant.save();
     req.flash('success', 'Successfully made a new restaurant!')
@@ -45,7 +46,7 @@ router.get( '/:id', asyncWrapper(async ( req, res ) => {
     res.render( 'restaurants/show', { restaurant, msg: req.flash("success")} );
 } ))
 
-router.get( '/:id/edit', asyncWrapper(async ( req, res ) => {
+router.get( '/:id/edit', isLoggedIn, asyncWrapper(async ( req, res ) => {
     const restaurant = await Restaurant.findById( req.params.id );
     if(!restaurant){
         req.flash('error', 'Restaurant not found!');
@@ -55,13 +56,13 @@ router.get( '/:id/edit', asyncWrapper(async ( req, res ) => {
 } ))
 
 //post request faked as put request
-router.put( '/:id', validateRestaurant, asyncWrapper(async ( req, res, next) => {
+router.put( '/:id', isLoggedIn, validateRestaurant, asyncWrapper(async ( req, res, next) => {
     const { id } = req.params; 
     const restaurant = await Restaurant.findByIdAndUpdate( id, { ...req.body.restaurant } );
     res.redirect( `/restaurants/${restaurant._id}` );
 } ))
 
-router.delete( '/:id', asyncWrapper(async ( req, res ) => {
+router.delete( '/:id', isLoggedIn, asyncWrapper(async ( req, res ) => {
     const { id } = req.params;
     const restaurant = await Restaurant.findByIdAndDelete( id);
     req.flash('success', 'Successfully deleted the restaurant!')

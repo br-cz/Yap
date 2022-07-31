@@ -40,9 +40,6 @@ app.set( 'views', path.join( __dirname, 'views' ) )
 app.use( express.static( "public" ) );
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use(flash());
-
-
 const sessionConfig = {
     secret: 'secret',
     resave: false,
@@ -54,8 +51,42 @@ const sessionConfig = {
 }
 
 app.use(session(sessionConfig))
+app.use(flash());
 
-//session(sessionConfig) must be above this
+app.use(passport.initialize());
+app.use(passport.session()); //must go bellow session(sessionConfig)
+
+//Use Passport Local, where the authentication method is contained within User
+passport.use(new PassportLocal(User.authenticate()));
+
+//Remember: serialize/deserialize describes how to store and remove a user
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Both packages are set up with the app.use() middleware, like these lines:
+// app.use(flash());
+// app.use(passport.initialize());
+// which makes their methods available in all routes automatically. Since we mount the rest of the routes on app.js when we use these lines,
+// app.use('/', userRoutes);
+// app.use('/campgrounds', campgroundRoutes)
+// app.use('/campgrounds/:id/reviews',reviewRoutes)
+// all routes in those files will have access to what was set up on app.js, taking into account what each package implemented behind the scenes. For example, the connect-flash package, as stated in the docs, does the following:
+// "With the flash middleware in place, all requests will have a req.flash() function that can be used for flash messages."
+
+//Handle url errors where the restaurant ID does not pass default validation, i.e. length < validLength
+// app.use((err, req, res, next)=>{
+//     const {statusCode = 500} = err;
+
+//     if(err){
+//         req.flash('error', "Restaurant not found!");
+//         return res.redirec t(`/restaurants`);
+//     }
+
+//     if(!err.message) err.message = "Something went wrong!";
+//     res.status(statusCode).render('error',{err});
+// })
+
+//session(sessionConfig)) must be above this
 //middleware for success flash flag
 app.use((req, res, next) => {
     //allows the flash to be used locally on every single request
@@ -64,32 +95,10 @@ app.use((req, res, next) => {
     next();
 })
 
+//below init of .flash()
 app.use('/', userRoutes);
 app.use('/restaurants', restaurantRoutes);
 app.use('/restaurants/:id/reviews', reviewRoutes);
-
-app.use(passport.initialize());
-app.use(passport.session()); //must go bellow session(sessionConfig)
-
-//Use Passport Local, where the authentication method is contained within User
-passport.use(new PassportLocal(User.authenticate()))
-
-//Remember: serialize/deserialize describes how to store and remove a user
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-//Handle url errors where the restaurant ID does not pass default validation, i.e. length < validLength
-app.use((err, req, res, next)=>{
-    const {statusCode = 500} = err;
-
-    if(err){
-        req.flash('error', "Restaurant not found!");
-        return res.redirect(`/restaurants`);
-    }
-
-    if(!err.message) err.message = "Something went wrong!";
-    res.status(statusCode).render('error',{err});
-})
 
 //tests user login
 app.get('/user', async(req, res) => {

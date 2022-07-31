@@ -10,6 +10,7 @@ const UserSchema = new Schema({
     }
 
 });
+
 //Add username/password fields + validations + useful methods w/ ease
 UserSchema.plugin(passportLocalMongoose); 
 
