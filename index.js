@@ -7,6 +7,9 @@ const ejsMate = require( 'ejs-mate' );
 const session = require('express-session');
 const ExpressError = require('./utils/ExpressError');
 const flash = require('connect-flash');
+const passport = require('passport');
+const PassportLocal = require('passport-local');
+const User = require('./models/user');
 
 const restaurants = require('./routes/restaurants');
 const reviews = require('./routes/reviews');
@@ -63,6 +66,17 @@ app.use((req, res, next) => {
 app.use('/restaurants', restaurants)
 app.use('/restaurants/:id/reviews', reviews)
 
+app.use(passport.initialize());
+app.use(passport.session()); //must go bellow session(sessionConfig)
+
+//Use Passport Local, where the authentication method is contained within User
+passport.use(new PassportLocal(User.authenticate()))
+
+//Remember: serialize/deserialize describes how to store and remove a user
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+//Handle url errors where the restaurant ID does not pass default validation, i.e. length < validLength
 app.use((err, req, res, next)=>{
     const {statusCode = 500} = err;
 
@@ -73,6 +87,13 @@ app.use((err, req, res, next)=>{
 
     if(!err.message) err.message = "Something went wrong!";
     res.status(statusCode).render('error',{err});
+})
+
+//tests user login
+app.get('/user', async(req, res) => {
+    const user = new User({email: 'emai1221l@gmail.com', username: 'use2121r123'});
+    const newUser = await User.register(user, 'chicken');
+    res.send(newUser);
 })
 
 app.get( '/', ( req, res ) => {
