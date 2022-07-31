@@ -3,11 +3,9 @@ const router = express.Router();
 const asyncWrapper = require('../utils/AsyncWrapper');
 const Restaurant = require('../models/restaurant');
 const {isLoggedIn, validateRestaurant, isAuthor} = require('../middleware.js');
+const restaurantsController = require('../controllers/restaurants');
 
-router.get( '/', async ( req, res ) => {
-    const restaurants = await Restaurant.find( {} );
-    res.render( 'restaurants/index', { restaurants } );
-} )
+router.get( '/', asyncWrapper(restaurantsController.index));
 
 //must be above id because if not, the route will try to find a restaurant with id of "new"
 router.get( '/new', isLoggedIn, ( req, res ) => {
