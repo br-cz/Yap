@@ -35,6 +35,7 @@
         </div>
 
         <div class="col-6">
+            <% if(currentUser) {%> 
             <h2>Feel Free To Leave a Review!</h2>
             <form action="/restaurants/<%=restaurant._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
                 <div class="mb-3">
@@ -49,12 +50,16 @@
                     </div>
                 </div>
                 <button class="btn btn-success">Submit</button>
+                <% } %> 
             </form>
             <% for(let review of restaurant.reviews) { %>
             <div class="card mb-3 ">
                 <div class="card-body">
                     <h5 class="card-title">Rating: <%= review.rating %></h5>
                     <p class="card-text">Review: <%= review.body %></p>
+                    <div class="card-footer text-muted">
+                        Posted by <%=restaurant.author.username%>
+                    </div>
                     <form action="/restaurants/<%=restaurant._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
                         <button class="btn btn-sm btn-danger">Delete</button>
                     </form>

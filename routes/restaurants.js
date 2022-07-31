@@ -23,6 +23,7 @@ router.post( '/', isLoggedIn, validateRestaurant, asyncWrapper( async ( req, res
 
 } ))
 
+//SHOW PAGE
 router.get( '/:id', asyncWrapper(async ( req, res ) => {
     //Populate will automatically replace the specified path in the document, with document(s) from other collection(s),
     //which is what we need to display its fields, body and rating
@@ -34,6 +35,7 @@ router.get( '/:id', asyncWrapper(async ( req, res ) => {
     res.render( 'restaurants/show', { restaurant, msg: req.flash("success")} );
 } ))
 
+//EDIT PAGE
 router.get( '/:id/edit', isLoggedIn, isAuthor, asyncWrapper(async ( req, res ) => {
     const restaurant = await Restaurant.findById( req.params.id );
     if(!restaurant){

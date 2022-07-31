@@ -9,15 +9,17 @@ const {reviewSchema} = require('../schemas.js');
 const Restaurant = require('../models/restaurant');
 const Review = require('../models/review');
 
-const {validateReview} = require('../middleware.js')
+const {isLoggedIn, validateReview} = require('../middleware.js')
 
-router.post('/', validateReview, asyncWrapper(async(req,res) =>{
+router.post('/', isLoggedIn, validateReview, asyncWrapper(async(req,res) =>{
     const restaurant = await Restaurant.findById(req.params.id);
     const review = new Review(req.body.review);
+    review.author = req.user._id;
     restaurant.reviews.push(review);
     //we can do this in parallel 
     await review.save();
     await restaurant.save();
+    req.flash('success', 'Created new review!');
     res.redirect(`/restaurants/${restaurant._id}`);
 }))
 
