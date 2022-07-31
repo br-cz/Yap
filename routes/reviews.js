@@ -9,17 +9,7 @@ const {reviewSchema} = require('../schemas.js');
 const Restaurant = require('../models/restaurant');
 const Review = require('../models/review');
 
-//can make this method modular
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if(error){
-        const message = error.details.map(el => el.message).join(',');
-        throw new ExpressError(message, 400);
-    }
-    else{
-        next();
-    }
-}
+const {validateReview} = require('../middleware.js')
 
 router.post('/', validateReview, asyncWrapper(async(req,res) =>{
     const restaurant = await Restaurant.findById(req.params.id);

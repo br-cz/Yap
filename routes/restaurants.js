@@ -1,21 +1,8 @@
 const express = require( 'express' );
 const router = express.Router();
 const asyncWrapper = require('../utils/AsyncWrapper');
-const ExpressError = require('../utils/ExpressError');
 const Restaurant = require('../models/restaurant');
-const {restaurantSchema} = require('../schemas.js');
-const {isLoggedIn} = require('../middleware.js');
-
-const validateRestaurant = (req, res, next) => {
-    const { error } = restaurantSchema.validate(req.body);
-    if(error){
-        const message = error.details.map(el => el.message).join(',');
-        throw new ExpressError(message, 400);
-    }
-    else{
-        next();
-    }
-}
+const {isLoggedIn, validateRestaurant, isAuthor} = require('../middleware.js');
 
 router.get( '/', async ( req, res ) => {
     const restaurants = await Restaurant.find( {} );
@@ -47,7 +34,7 @@ router.get( '/:id', asyncWrapper(async ( req, res ) => {
     res.render( 'restaurants/show', { restaurant, msg: req.flash("success")} );
 } ))
 
-router.get( '/:id/edit', isLoggedIn, asyncWrapper(async ( req, res ) => {
+router.get( '/:id/edit', isLoggedIn, isAuthor, asyncWrapper(async ( req, res ) => {
     const restaurant = await Restaurant.findById( req.params.id );
     if(!restaurant){
         req.flash('error', 'Restaurant not found!');
@@ -57,15 +44,16 @@ router.get( '/:id/edit', isLoggedIn, asyncWrapper(async ( req, res ) => {
 } ))
 
 //post request faked as put request
-router.put( '/:id', isLoggedIn, validateRestaurant, asyncWrapper(async ( req, res, next) => {
+router.put( '/:id', isLoggedIn, isAuthor, validateRestaurant, asyncWrapper(async ( req, res, next) => {
     const { id } = req.params; 
     const restaurant = await Restaurant.findByIdAndUpdate( id, { ...req.body.restaurant } );
-    res.redirect( `/restaurants/${restaurant._id}` );
+    req.flash('success', 'Successfully updated the restaurant!')
+    res.redirect( `/restaurants/${id}` );
 } ))
 
-router.delete( '/:id', isLoggedIn, asyncWrapper(async ( req, res ) => {
+router.delete( '/:id', isLoggedIn, isAuthor, asyncWrapper(async ( req, res ) => {
     const { id } = req.params;
-    const restaurant = await Restaurant.findByIdAndDelete( id);
+    const restaurant = await Restaurant.findByIdAndDelete(id);
     req.flash('success', 'Successfully deleted the restaurant!')
     res.redirect( `/restaurants` );
 } ))
