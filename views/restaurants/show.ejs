@@ -58,7 +58,7 @@
                     <h5 class="card-title">Rating: <%= review.rating %></h5>
                     <p class="card-text">Review: <%= review.body %></p>
                     <div class="card-footer text-muted">
-                        Posted by <%=restaurant.author.username%>
+                        Reviewed by <%= review.author.username%>
                     </div>
                     <form action="/restaurants/<%=restaurant._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
                         <button class="btn btn-sm btn-danger">Delete</button>

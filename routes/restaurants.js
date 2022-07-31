@@ -27,7 +27,13 @@ router.post( '/', isLoggedIn, validateRestaurant, asyncWrapper( async ( req, res
 router.get( '/:id', asyncWrapper(async ( req, res ) => {
     //Populate will automatically replace the specified path in the document, with document(s) from other collection(s),
     //which is what we need to display its fields, body and rating
-    const restaurant = await Restaurant.findById( req.params.id ).populate('reviews').populate('author');
+    const restaurant = await Restaurant.findById( req.params.id ).populate({
+        //Used to find out who posted which review
+        path: 'reviews',
+        populate: {
+            path: 'author' //adds the author of a particular review, we can also just add the username instead of author
+        }
+    }).populate('author');
     if(!restaurant){
         req.flash('error', 'Restaurant not found!');
         return res.redirect('/restaurants');
