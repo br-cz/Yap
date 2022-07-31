@@ -11,8 +11,9 @@ const passport = require('passport');
 const PassportLocal = require('passport-local');
 const User = require('./models/user');
 
-const restaurants = require('./routes/restaurants');
-const reviews = require('./routes/reviews');
+const userRoutes = require('./routes/users');
+const restaurantRoutes = require('./routes/restaurants');
+const reviewRoutes = require('./routes/reviews');
 
 
 // override with POST having ?_method=PUT
@@ -63,8 +64,9 @@ app.use((req, res, next) => {
     next();
 })
 
-app.use('/restaurants', restaurants)
-app.use('/restaurants/:id/reviews', reviews)
+app.use('/', userRoutes);
+app.use('/restaurants', restaurantRoutes);
+app.use('/restaurants/:id/reviews', reviewRoutes);
 
 app.use(passport.initialize());
 app.use(passport.session()); //must go bellow session(sessionConfig)
