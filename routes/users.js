@@ -7,19 +7,14 @@ const asyncWrapper = require('../utils/asyncWrapper');
 
 const userController = require('../controllers/users');
 
-router.get('/register', userController.renderRegister);
+router.route('/register')
+    .get(userController.renderRegister)
+    .post(asyncWrapper(userController.register))
 
-router.post('/register', asyncWrapper(userController.register));
-
-router.get('/login', userController.renderLogin);
-
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login', keepSessionInfo: true}), userController.login);
+router.route('/login')
+    .get(userController.renderLogin)
+    .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login', keepSessionInfo: true}), userController.login)
 
 router.get('/logout', userController.logout)
-
-// router.post('/logout', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login'}), (req, res) => {
-//     req.flash('success', 'Nice to see you again!');
-//     res.redirect('/restaurants');
-// });
 
 module.exports = router;

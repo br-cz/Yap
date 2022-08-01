@@ -5,22 +5,21 @@ const Restaurant = require('../models/restaurant');
 const {isLoggedIn, validateRestaurant, isAuthor} = require('../middleware.js');
 const restaurantsController = require('../controllers/restaurants');
 
-router.get( '/', asyncWrapper(restaurantsController.index));
+//neat way to group similar paths
+router.route('/')
+    .get(asyncWrapper(restaurantsController.index))
+    .post( isLoggedIn, validateRestaurant, asyncWrapper( restaurantsController.createCampground))
 
 //must be above id because if not, the route will try to find a restaurant with id of "new"
 router.get( '/new', isLoggedIn, restaurantsController.renderNewForm)
 
-router.post( '/', isLoggedIn, validateRestaurant, asyncWrapper( restaurantsController.createCampground))
+router.route('/:id')
+    .get( asyncWrapper(restaurantsController.showCampground))
+    .put( isLoggedIn, isAuthor, validateRestaurant, asyncWrapper(restaurantsController.updateCampground))//post request faked as put request
+    .delete( isLoggedIn, isAuthor, asyncWrapper(restaurantsController.deleteCampground));
 
-
-router.get( '/:id', asyncWrapper(restaurantsController.showCampground));
 
 //EDIT PAGE
 router.get( '/:id/edit', isLoggedIn, isAuthor, asyncWrapper(restaurantsController.renderEditForm));
-
-//post request faked as put request
-router.put( '/:id', isLoggedIn, isAuthor, validateRestaurant, asyncWrapper(restaurantsController.updateCampground));
-
-router.delete( '/:id', isLoggedIn, isAuthor, asyncWrapper(restaurantsController.deleteCampground));
 
 module.exports = router;

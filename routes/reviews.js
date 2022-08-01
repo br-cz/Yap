@@ -15,7 +15,6 @@ const {isLoggedIn, isReviewAuthor, validateReview} = require('../middleware.js')
 
 router.post('/', isLoggedIn, validateReview, asyncWrapper(reviewController.createReview));
 
-
 //Need reviewId to remove the reference of the review in the restaurant and the review itself
 router.delete('/:reviewId', isLoggedIn, isReviewAuthor, asyncWrapper(reviewController.deleteReview));
 
