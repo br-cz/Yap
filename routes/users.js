@@ -5,47 +5,17 @@ const passport = require('passport');
 
 const asyncWrapper = require('../utils/asyncWrapper');
 
-router.get('/register', (req, res) => {
-    res.render('users/register');
-});
+const userController = require('../controllers/users');
 
-router.post('/register', asyncWrapper( async (req, res) => {
-    try{
-    const {email, username, password} = req.body;
-    const user = new User({email, username});
-    const registeredUser = await User.register(user, password);
+router.get('/register', userController.renderRegister);
 
-    //no await because login requires a callback function
-    req.login(registeredUser, err => {
-        if(err) return next(err);
-        req.flash('success', 'Welcome to Yap');
-        res.redirect('/restaurants');
-    })
+router.post('/register', asyncWrapper(userController.register));
 
-    } catch(e){
-        req.flash('error', e.message);
-        res.redirect('/register');
-    }
-}));
+router.get('/login', userController.renderLogin);
 
-router.get('/login', (req, res) => {
-    res.render('users/login');
-});
+router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login', keepSessionInfo: true}), userController.login);
 
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login', keepSessionInfo: true}), (req, res) => {
-    req.flash('success', 'Nice to see you again!');
-    const redirectUrl = req.session.prevUrl || '/restaurants'; //Allows for better user experience redirecting back to their previous page
-    delete req.session.prevUrl; //we don't need this anymore
-    res.redirect(redirectUrl);
-});
-
-router.get('/logout', (req, res, next) => {
-    req.logout(function(err) {
-      if (err) { return next(err); }
-      req.flash('success', "Logged out");
-      res.redirect('/restaurants');
-    });
-  });
+router.get('/logout', userController.logout)
 
 // router.post('/logout', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login'}), (req, res) => {
 //     req.flash('success', 'Nice to see you again!');
