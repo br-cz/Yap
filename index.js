@@ -1,3 +1,10 @@
+//process.env.NODE_ENV is an environment variable, which is either development or production
+//essentially, when we deploy this app we will be in production
+//So when we're not in production, this adds all our .env variables into process.env
+if (process.env.NODE_ENV !== "production"){
+    require('dotenv').config();
+}
+
 const express = require( 'express' );
 const app = express();
 const path = require( 'path' );

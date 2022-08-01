@@ -5,6 +5,13 @@ const Restaurant = require('../models/restaurant');
 const {isLoggedIn, validateRestaurant, isAuthor} = require('../middleware.js');
 const restaurantsController = require('../controllers/restaurants');
 
+//used to handle multipart/form-data, what we use to handle file uploads
+const multer = require('multer');
+//Cloudinary: Programmable Media
+//API - based video and image management with dynamic transformations—for resizing, 
+//cropping, overlays—automated optimization and accelerated delivery of content via CDNs
+const upload = multer({dest:'uploads/'});
+
 //neat way to group similar paths
 router.route('/')
     .get(asyncWrapper(restaurantsController.index))

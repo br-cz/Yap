@@ -2,7 +2,8 @@
 <div class="row">
     <h1 class="text-center">Recommend a Restaurant</h1>
     <div class="col-md-6 offset-md-3">
-        <form action="/restaurants" method="POST" novalidate class="needs-validation" >
+        <!-- enctype allows to upload files, like multiple images -->
+        <form action="/restaurants" method="POST" novalidate class="needs-validation" enctype="multipart/form-data" >
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" type="text" id="title" name="restaurant[title]" required>
