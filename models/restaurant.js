@@ -4,7 +4,12 @@ const Schema = mongoose.Schema; //used to shorten mongoose.Schema types
 
 const RestaurantSchema = new Schema( {
     title: String,
-    image: String,
+    images: [
+        {
+            url: String,
+            filename: String
+        }
+    ],
     priceRange: Number,
     description: String,
     location: String,

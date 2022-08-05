@@ -8,6 +8,7 @@ const restaurantsController = require('../controllers/restaurants');
 //used to handle multipart/form-data, what we use to handle file uploads
 const multer = require('multer');
 //Cloudinary: Programmable Media
+//inspo: wanting a cloud service that allows for image transformations (https://www.reddit.com/r/node/comments/5k2jfl/best_cloud_image_upload_service/)
 //API - based video and image management with dynamic transformations—for resizing, 
 //cropping, overlays—automated optimization and accelerated delivery of content via CDNs
 const {storage} = require('../cloudinary');
@@ -16,11 +17,7 @@ const upload = multer({storage});
 //neat way to group similar paths
 router.route('/')
     .get(asyncWrapper(restaurantsController.index))
-    .post(upload.array('image'), (req, res) => {
-        console.log(req.body, req.files);
-        res.send("It worked!");
-    })
-    // .post( isLoggedIn, validateRestaurant, asyncWrapper( restaurantsController.createCampground))
+    .post( isLoggedIn, upload.array('image'), validateRestaurant,  asyncWrapper( restaurantsController.createCampground))
 
 //must be above id because if not, the route will try to find a restaurant with id of "new"
 router.get( '/new', isLoggedIn, restaurantsController.renderNewForm)

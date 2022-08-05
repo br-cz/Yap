@@ -11,9 +11,12 @@ module.exports.renderNewForm = (req, res) => {
 }
 
 module.exports.createCampground = async (req, res, next) => {
-    const restaurant = new Restaurant(req.body.restaurant);
+    const restaurant = new Restaurant(req.body.restaurant); 
+    //allows us to fill in the image row fields in our restaurant model
+    restaurant.images = req.files.map(f => ({url: f.path, filename: f.filename}))
     restaurant.author = req.user._id;
     await restaurant.save();
+    console.log(restaurant);
     req.flash('success', 'Successfully made a new restaurant!');
     res.redirect(`/restaurants/${restaurant._id}`)
 }
@@ -51,7 +54,7 @@ module.exports.updateCampground = async (req, res) => {
 }
 
 module.exports.deleteCampground = async (req, res) => {
-    await Restaurant.findByIdAndDelete(restaurant._id);
+    await Restaurant.findByIdAndDelete(req.params.id);
     req.flash('success', 'Successfully removed restaurant')
     res.redirect('/restaurants');
 } 
