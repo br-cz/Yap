@@ -10,12 +10,17 @@ const multer = require('multer');
 //Cloudinary: Programmable Media
 //API - based video and image management with dynamic transformations—for resizing, 
 //cropping, overlays—automated optimization and accelerated delivery of content via CDNs
-const upload = multer({dest:'uploads/'});
+const {storage} = require('../cloudinary');
+const upload = multer({storage});
 
 //neat way to group similar paths
 router.route('/')
     .get(asyncWrapper(restaurantsController.index))
-    .post( isLoggedIn, validateRestaurant, asyncWrapper( restaurantsController.createCampground))
+    .post(upload.array('image'), (req, res) => {
+        console.log(req.body, req.files);
+        res.send("It worked!");
+    })
+    // .post( isLoggedIn, validateRestaurant, asyncWrapper( restaurantsController.createCampground))
 
 //must be above id because if not, the route will try to find a restaurant with id of "new"
 router.get( '/new', isLoggedIn, restaurantsController.renderNewForm)
