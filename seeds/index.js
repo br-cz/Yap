@@ -28,7 +28,10 @@ const seedDB = async () => {
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample( descriptors )} ${sample( places )}`,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam dolores vero perferendis laudantium, consequuntur voluptatibus nulla architecto, sit soluta esse iure sed labore ipsam a cum nihil atque molestiae deserunt!',
-            image: 'https://source.unsplash.com/collection/345703',
+            images: {
+                url: 'https://res.cloudinary.com/dkq6ijijx/image/upload/v1659739734/Yap/j0iefl6q64npsel7qtka.png',
+                filename: 'Yap/j0iefl6q64npsel7qtka',
+              },
             priceRange
         } )
         await resto.save();
