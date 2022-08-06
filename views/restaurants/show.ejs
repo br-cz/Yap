@@ -5,12 +5,14 @@
         <div class="col-6">
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <% restaurant.images.forEach((img, i) => {  %>	      
+                    <% restaurant.images.forEach((img, i) => {  %>	  
+                    <!-- used to display the first image in the carousel and set it up properly so the carousel actually shows-->
                     <div class="carousel-item <%= i === 0 ? 'active' : ''%>">
                         <img src="<%= img.url%>"  class="d-block w-100" alt="...">
                     </div>    
                   <% }) %> 
                 </div>
+                <% if (restaurant.images.length > 1 ) {%> 
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                   <span class="visually-hidden">Previous</span>
@@ -19,6 +21,7 @@
                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                   <span class="visually-hidden">Next</span>
                 </button>
+                <% } %> 
               </div>
 
 
