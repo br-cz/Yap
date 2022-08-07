@@ -48,11 +48,13 @@
 
             <div class="mb-3">
                 <% restaurant.images.forEach(function(img, i) {  %>
-                <img src="<%=img.url %>" class="img-thumbnail" alt="">
-                <div class="form-check-inline">
-                    <input type="checkbox" id="image-<%=i%>" name="deleteImages[]" value="<%=img.filename%>">
+                <div>
+                    <img src="<%=img.thumbnail %>" class="img-thumbnail" alt="">
+                    <div class="form-check-inline">
+                        <input type="checkbox" id="image-<%=i%>" name="deleteImages[]" value="<%=img.filename%>">
+                    </div>
+                    <label for="image-<%=i%>">Delete Image</label>
                 </div>
-                <label for="image-<%=i%>">Delete Image</label>
                 <% })%>
             </div>
 
