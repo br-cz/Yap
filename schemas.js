@@ -6,7 +6,8 @@ module.exports.restaurantSchema = Joi.object({
         priceRange: Joi.number().required().min(0),
         description: Joi.string().required(),
         location: Joi.string().required(),
-    }).required()
+    }).required(),
+    deleteImages: Joi.array()
 });
 
 module.exports.reviewSchema = Joi.object({

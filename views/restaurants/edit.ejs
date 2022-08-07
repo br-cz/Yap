@@ -41,8 +41,19 @@
             </div>
 
             <div class="mb-3">
-                <label for="formFileMultiple" class="form-label">Choose Image(s)</label>
-                <input class="form-control" type="file" id="image" name="image" multiple required>
+                <label for="formFileMultiple" class="form-label">Add Image(s)</label>
+                <input class="form-control" type="file" id="image" name="image" multiple>
+            </div>
+
+
+            <div class="mb-3">
+                <% restaurant.images.forEach(function(img, i) {  %>
+                <img src="<%=img.url %>" class="img-thumbnail" alt="">
+                <div class="form-check-inline">
+                    <input type="checkbox" id="image-<%=i%>" name="deleteImages[]" value="<%=img.filename%>">
+                </div>
+                <label for="image-<%=i%>">Delete Image</label>
+                <% })%>
             </div>
 
             <div class="mb-3">
