@@ -17,15 +17,15 @@ const upload = multer({storage});
 //neat way to group similar paths
 router.route('/')
     .get(asyncWrapper(restaurantsController.index))
-    .post( isLoggedIn, upload.array('image'), validateRestaurant,  asyncWrapper( restaurantsController.createCampground))
+    .post( isLoggedIn, upload.array('image'), validateRestaurant,  asyncWrapper( restaurantsController.createRestaurant))
 
 //must be above id because if not, the route will try to find a restaurant with id of "new"
 router.get( '/new', isLoggedIn, restaurantsController.renderNewForm)
 
 router.route('/:id')
-    .get( asyncWrapper(restaurantsController.showCampground))
-    .put( isLoggedIn, isAuthor, upload.array('image'), validateRestaurant, asyncWrapper(restaurantsController.updateCampground))//post request faked as put request
-    .delete( isLoggedIn, isAuthor, asyncWrapper(restaurantsController.deleteCampground));
+    .get( asyncWrapper(restaurantsController.showRestaurant))
+    .put( isLoggedIn, isAuthor, upload.array('image'), validateRestaurant, asyncWrapper(restaurantsController.updateRestaurant))//post request faked as put request
+    .delete( isLoggedIn, isAuthor, asyncWrapper(restaurantsController.deleteRestaurant));
 
 
 //EDIT PAGE

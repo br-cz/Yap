@@ -15,7 +15,7 @@ module.exports.renderNewForm = (req, res) => {
     res.render('restaurants/new');
 }
 
-module.exports.createCampground = async (req, res, next) => {
+module.exports.createRestaurant = async (req, res, next) => {
     const geoData = await geocoder.forwardGeocode({
         query: req.body.restaurant.location,
         limit: 1
@@ -32,7 +32,7 @@ module.exports.createCampground = async (req, res, next) => {
     res.redirect(`/restaurants/${restaurant._id}`)
 }
 
-module.exports.showCampground = async (req, res,) => {
+module.exports.showRestaurant = async (req, res,) => {
         //Populate will automatically replace the specified path in the document, with document(s) from other collection(s),
     //which is what we need to display its fields, body and rating
     const restaurant = await Restaurant.findById(req.params.id).populate({
@@ -58,7 +58,7 @@ module.exports.renderEditForm = async (req, res) => {
     res.render( 'restaurants/edit', { restaurant } );
 }
 
-module.exports.updateCampground = async (req, res) => {
+module.exports.updateRestaurant = async (req, res) => {
     //console.log(req.body);
     const restaurant = await Restaurant.findByIdAndUpdate(req.params.id, { ...req.body.restaurant });
     //the assignment returns an array, so we create this array variable and spread them (via ...) amongst the images
@@ -77,7 +77,7 @@ module.exports.updateCampground = async (req, res) => {
     res.redirect(`/restaurants/${restaurant._id}`)
 }
 
-module.exports.deleteCampground = async (req, res) => {
+module.exports.deleteRestaurant = async (req, res) => {
     await Restaurant.findByIdAndDelete(req.params.id);
     req.flash('success', 'Successfully removed restaurant')
     res.redirect('/restaurants');
