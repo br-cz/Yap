@@ -20,7 +20,7 @@ const seedDB = async () => {
     await Restaurant.deleteMany( {} );
     for ( let i = 0; i < 300; i++ ) {
         const random1000 = Math.floor( Math.random() * 1000 );
-        const priceRange =  Math.floor( Math.random() * 200 )+ 10;
+        const priceRange = Math.floor( Math.random() * 200 ) + 10;
         const resto = new Restaurant( {
             //YOUR USER ID
             author: '62e5f30c37b823c492e741bc',
@@ -34,7 +34,11 @@ const seedDB = async () => {
                     filename: 'Yap/df7cpfnvmlc64kvg8rew',
                 }
             ],
-            priceRange
+            priceRange,
+            geometry: {
+                type: "Point",
+                coordinates: [34.566667, 40.866667] //the center of the earth, apparently (for seeded locations)
+            }
         } )
         await resto.save();
     }

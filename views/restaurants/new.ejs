@@ -1,54 +1,54 @@
 <% layout('layouts/boilerplate') %>
-<div class="row">
-    <h1 class="text-center">Recommend a Restaurant</h1>
-    <div class="col-md-6 offset-md-3">
-        <!-- enctype allows to upload files, like multiple images -->
-        <form action="/restaurants" method="POST" novalidate class="needs-validation" enctype="multipart/form-data" >
-            <div class="mb-3">
-                <label class="form-label" for="title">Title</label>
-                <input class="form-control" type="text" id="title" name="restaurant[title]" required>
-                <div class="valid-feedback">
-                    Sounds cool!
+    <div class="row">
+        <h1 class="text-center">Recommend a Restaurant</h1>
+        <div class="col-md-6 offset-md-3">
+            <!-- enctype allows to upload files, like multiple images -->
+            <form action="/restaurants" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label" for="title">Title</label>
+                    <input class="form-control" type="text" id="title" name="restaurant[title]" required>
+                    <div class="valid-feedback">
+                        Sounds cool!
+                    </div>
                 </div>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label" for="location">Location</label>
-                <input class="form-control" type="text" id="location" name="restaurant[location]" required>
-                <div class="valid-feedback">
-                    I've always wanted to go there!
-                </div>
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="priceRange">Restaurant Price Range</label>
-                <div class="input-group">
-                    <span class="input-group-text" id="price-label">$</span>
-                    <input type="text" class="form-control" id="priceRange" placeholder="0.00" aria-label="priceRange"
-                        aria-describedby="price-label" name="restaurant[priceRange]" required>
+                <div class="mb-3">
+                    <label class="form-label" for="location">Location</label>
+                    <input class="form-control" type="text" id="location" name="restaurant[location]" required>
+                    <div class="valid-feedback">
+                        I've always wanted to go there!
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="description">Description</label>
-                <textarea class="form-control" type="text" id="description" name="restaurant[description]"
-                    required></textarea>
-                <div class="valid-feedback">
-                    Ooh yummy
+                <div class="mb-3">
+                    <label class="form-label" for="priceRange">Restaurant Price Range</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="price-label">$</span>
+                        <input type="text" class="form-control" id="priceRange" placeholder="0.00"
+                            aria-label="priceRange" aria-describedby="price-label" name="restaurant[priceRange]"
+                            required>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Allows for custom images to give future visitors a more in depth view of the restaurant -->
-            <div class="mb-3">
-                <label for="formFileMultiple" class="form-label">Choose Image(s)</label>
-                <input class="form-control" type="file" id="image" name="image" multiple required>
-            </div>
-            
-            <div class="mb-3">
-                <button class="btn btn-success">Recommend!</button>
-            </div>
-        </form>
-        <a href="/restaurant">All Featured Restaurants</a>
+                <div class="mb-3">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control" type="text" id="description" name="restaurant[description]"
+                        required></textarea>
+                    <div class="valid-feedback">
+                        Ooh yummy
+                    </div>
+                </div>
+
+                <!-- Allows for custom images to give future visitors a more in depth view of the restaurant -->
+                <div class="mb-3">
+                    <label for="formFileMultiple" class="form-label">Choose Image(s)</label>
+                    <input class="form-control" type="file" id="image" name="image" multiple>
+                </div>
+
+                <div class="mb-3">
+                    <button class="btn btn-success">Recommend!</button>
+                </div>
+            </form>
+            <a href="/restaurant">All Featured Restaurants</a>
+        </div>
     </div>
-</div>
-
