@@ -24,7 +24,7 @@ router.get( '/new', isLoggedIn, restaurantsController.renderNewForm)
 
 router.route('/:id')
     .get( asyncWrapper(restaurantsController.showCampground))
-    .put( isLoggedIn, isAuthor, validateRestaurant, asyncWrapper(restaurantsController.updateCampground))//post request faked as put request
+    .put( isLoggedIn, isAuthor, upload.array('image'), validateRestaurant, asyncWrapper(restaurantsController.updateCampground))//post request faked as put request
     .delete( isLoggedIn, isAuthor, asyncWrapper(restaurantsController.deleteCampground));
 
 
