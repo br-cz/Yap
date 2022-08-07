@@ -19,21 +19,17 @@ module.exports.createCampground = async (req, res, next) => {
     const geoData = await geocoder.forwardGeocode({
         query: req.body.restaurant.location,
         limit: 1
-        })
-        .send()
-        // .then(response => {
-        //   const match = response.body;
-        // });
-    console.log("Geo Data:\n");
-    console.log(geoData.body.features[0].geometry.coordinates);
-    // const restaurant = new Restaurant(req.body.restaurant); 
-    // //allows us to fill in the image row fields in our restaurant model
-    // restaurant.images = req.files.map(f => ({url: f.path, filename: f.filename}))
-    // restaurant.author = req.user._id;
-    // await restaurant.save();
-    // console.log(restaurant);
-    // req.flash('success', 'Successfully made a new restaurant!');
-    // res.redirect(`/restaurants/${restaurant._id}`)
+    }).send()
+    const restaurant = new Restaurant(req.body.restaurant); 
+    //this returns GeoJSON thanks to MapBox
+    restaurant.geometry = geoData.body.features[0].geometry;
+    //allows us to fill in the image row fields in our restaurant model
+    restaurant.images = req.files.map(f => ({url: f.path, filename: f.filename}))
+    restaurant.author = req.user._id;
+    await restaurant.save();
+    console.log(restaurant);
+    req.flash('success', 'Successfully made a new restaurant!');
+    res.redirect(`/restaurants/${restaurant._id}`)
 }
 
 module.exports.showCampground = async (req, res,) => {

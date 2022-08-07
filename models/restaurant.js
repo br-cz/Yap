@@ -17,6 +17,17 @@ const RestaurantSchema = new Schema( {
     priceRange: Number,
     description: String,
     location: String,
+    geometry: {
+        type: {            // from Mongoose GeoJSON schema suggestion 
+          type: String,    // Don't do `{ location: { type: String } }`
+          enum: ['Point'], // 'location.type' must be 'Point'
+          required: true
+        },
+        coordinates: {
+          type: [Number],
+          required: true
+        }
+    },
     author: 
         {
             type: Schema.Types.ObjectId,
