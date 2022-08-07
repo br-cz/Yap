@@ -3,9 +3,6 @@
 
     <div class="row">
         <div class="col-6">
-
-            <div id='map' style='width: 400px; height: 300px;'></div>
-
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <% restaurant.images.forEach((img, i)=> { %>
@@ -39,9 +36,12 @@
                         <%= restaurant.description%>
                     </p>
                 </div>
+
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item text-muted">
                         <%= restaurant.location%>
+                        <div id='map' style='width: 400px; height: 300px;'></div>
+
                     </li>
                     <li class="list-group-item">$<%= restaurant.priceRange%>/night</li>
                 </ul>
@@ -129,6 +129,7 @@
     <script>
         const mbToken = '<%-process.env.MAPBOX_TOKEN %>';
         // Need to stringify because restaurant ID needs to be in quotes, else it throws an error
+        //Make sure no spaces in the ejs assignment!!!!!!!!!!!!!!!!
         const restaurant = <%-JSON.stringify( restaurant )%>;
     </script>
 
