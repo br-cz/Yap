@@ -7,42 +7,41 @@
         <a href="/restaurants/new"> Add a restaurant</a>
     </div>
 
-    <ul>
-        <% for(let resto of restaurants){%>
-            <div class="card mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <% if(resto.images.length) { %>
-                            <img class="img-fluid" alt="" src="<%= resto.images[0].url %>">
-                            <% } else { %>
-                                <img class="img-fluid mx-auto d-block" alt="" src="../images/imagenotfound.png">
-                                <% } %>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <%= resto.title %>
-                            </h5>
-                            <p class="card-text">
-                                <%= resto.description %>
-                            </p>
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    <%= resto.location%>
-                                </small>
-                            </p>
-                            <a class="btn btn-primary" href="/restaurants/<%=resto._id%>">View <%=resto.title%></a>
-                        </div>
+    <% for(let resto of restaurants){%>
+        <div class="card mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <% if(resto.images.length) { %>
+                        <img class="img-fluid" alt="" src="<%= resto.images[0].url %>">
+                        <% } else { %>
+                            <img class="img-fluid mx-auto d-block" alt="" src="../images/imagenotfound.png">
+                            <% } %>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= resto.title %>
+                        </h5>
+                        <p class="card-text">
+                            <%= resto.description %>
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <%= resto.location%>
+                            </small>
+                        </p>
+                        <a class="btn btn-primary" href="/restaurants/<%=resto._id%>">View <%=resto.title%></a>
                     </div>
                 </div>
             </div>
-            <%}%>
-    </ul>
+        </div>
+        <%}%>
 
-    <script>
-        const mbToken = '<%-process.env.MAPBOX_TOKEN%>';
-        //we need to map our restaurant data onto features because mapbox is expecting our cluster map data to be in a "features" object
-        const restaurants = {features: <%-JSON.stringify(restaurants)%>};
-    </script>
 
-    <script src="/javascripts/clusterMap.js"></script>
+            <script>
+                const mbToken = '<%-process.env.MAPBOX_TOKEN%>';
+                //we need to map our restaurant data onto features because mapbox is expecting our cluster map data to be in a "features" object
+                const restaurants = { features: <%-JSON.stringify( restaurants ) %>};
+            </script>
+
+            <script src="/javascripts/clusterMap.js"></script>
