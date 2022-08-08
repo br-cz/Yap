@@ -41,6 +41,8 @@
 
     <script>
         const mbToken = '<%-process.env.MAPBOX_TOKEN%>';
+        //we need to map our restaurant data onto features because mapbox is expecting our cluster map data to be in a "features" object
+        const restaurants = {features: <%-JSON.stringify(restaurants)%>};
     </script>
 
     <script src="/javascripts/clusterMap.js"></script>
