@@ -10,7 +10,7 @@ map.on( 'load', () => {
     // Add a new source from our GeoJSON data and
     // set the 'cluster' option to true. GL-JS will
     // add the point_count property to your source data.
-    map.addSource( 'earthquakes', {
+    map.addSource( 'restaurants', {
         type: 'geojson',
         //our own custom restaurant's data
         data: restaurants,
@@ -22,7 +22,7 @@ map.on( 'load', () => {
     map.addLayer( {
         id: 'clusters',
         type: 'circle',
-        source: 'earthquakes',
+        source: 'restaurants',
         filter: ['has', 'point_count'],
         paint: {
             // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
@@ -54,7 +54,7 @@ map.on( 'load', () => {
     map.addLayer( {
         id: 'cluster-count',
         type: 'symbol',
-        source: 'earthquakes',
+        source: 'restaurants',
         filter: ['has', 'point_count'],
         layout: {
             'text-field': '{point_count_abbreviated}',
@@ -66,7 +66,7 @@ map.on( 'load', () => {
     map.addLayer( {
         id: 'unclustered-point',
         type: 'circle',
-        source: 'earthquakes',
+        source: 'restaurants',
         filter: ['!', ['has', 'point_count']],
         paint: {
             'circle-color': '#11b4da',
@@ -82,7 +82,7 @@ map.on( 'load', () => {
             layers: ['clusters']
         } );
         const clusterId = features[0].properties.cluster_id;
-        map.getSource( 'earthquakes' ).getClusterExpansionZoom(
+        map.getSource( 'restaurants' ).getClusterExpansionZoom(
             clusterId,
             ( err, zoom ) => {
                 if ( err ) return;
@@ -100,10 +100,9 @@ map.on( 'load', () => {
     // the location of the feature, with
     // description HTML from its properties.
     map.on( 'click', 'unclustered-point', ( e ) => {
+        const markupText = e.features[0].properties.popUpMarkup;
         const coordinates = e.features[0].geometry.coordinates.slice();
-        const mag = e.features[0].properties.mag;
-        const tsunami =
-            e.features[0].properties.tsunami === 1 ? 'yes' : 'no';
+
 
         // Ensure that if the map is zoomed out such that
         // multiple copies of the feature are visible, the
@@ -115,7 +114,7 @@ map.on( 'load', () => {
         new mapboxgl.Popup()
             .setLngLat( coordinates )
             .setHTML(
-                `magnitude: ${mag}<br>Was there a tsunami?: ${tsunami}`
+                markupText
             )
             .addTo( map );
     } );
