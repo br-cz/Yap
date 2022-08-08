@@ -37,7 +37,7 @@ const seedDB = async () => {
             priceRange,
             geometry: {
                 type: "Point",
-                coordinates: [34.566667, 40.866667] //the center of the earth, apparently (for seeded locations)
+                coordinates: [cities[random1000].longitude, cities[random1000].latitude] //the center of the earth, apparently (for seeded locations)
             }
         } )
         await resto.save();

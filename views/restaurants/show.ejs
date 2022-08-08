@@ -40,7 +40,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item text-muted">
                         <%= restaurant.location%>
-                        <div id='map' style='width: 400px; height: 300px;'></div>
+                            <div id='map' style='width: 600px; height: 300px;'></div>
 
                     </li>
                     <li class="list-group-item">$<%= restaurant.priceRange%>/night</li>
@@ -130,7 +130,7 @@
         const mbToken = '<%-process.env.MAPBOX_TOKEN %>';
         // Need to stringify because restaurant ID needs to be in quotes, else it throws an error
         //Make sure no spaces in the ejs assignment!!!!!!!!!!!!!!!!
-        const restaurant = <%-JSON.stringify( restaurant )%>;
+        const restaurant = <%-JSON.stringify( restaurant ) %>;
     </script>
 
     <script src="/javascripts/showPageMap.js"></script>
