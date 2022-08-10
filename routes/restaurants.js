@@ -1,34 +1,34 @@
 const express = require( 'express' );
 const router = express.Router();
-const asyncWrapper = require('../utils/AsyncWrapper');
-const Restaurant = require('../models/restaurant');
-const {isLoggedIn, validateRestaurant, isAuthor} = require('../middleware.js');
-const restaurantsController = require('../controllers/restaurants');
+const asyncWrapper = require( '../utils/asyncWrapper' );
+const Restaurant = require( '../models/restaurant' );
+const { isLoggedIn, validateRestaurant, isAuthor } = require( '../middleware.js' );
+const restaurantsController = require( '../controllers/restaurants' );
 
 //used to handle multipart/form-data, what we use to handle file uploads
-const multer = require('multer');
+const multer = require( 'multer' );
 //Cloudinary: Programmable Media
 //inspo: wanting a cloud service that allows for image transformations (https://www.reddit.com/r/node/comments/5k2jfl/best_cloud_image_upload_service/)
 //API - based video and image management with dynamic transformations—for resizing, 
 //cropping, overlays—automated optimization and accelerated delivery of content via CDNs
-const {storage} = require('../cloudinary');
-const upload = multer({storage});
+const { storage } = require( '../cloudinary' );
+const upload = multer( { storage } );
 
 //neat way to group similar paths
-router.route('/')
-    .get(asyncWrapper(restaurantsController.index))
-    .post( isLoggedIn, upload.array('image'), validateRestaurant,  asyncWrapper( restaurantsController.createRestaurant))
+router.route( '/' )
+    .get( asyncWrapper( restaurantsController.index ) )
+    .post( isLoggedIn, upload.array( 'image' ), validateRestaurant, asyncWrapper( restaurantsController.createRestaurant ) )
 
 //must be above id because if not, the route will try to find a restaurant with id of "new"
-router.get( '/new', isLoggedIn, restaurantsController.renderNewForm)
+router.get( '/new', isLoggedIn, restaurantsController.renderNewForm )
 
-router.route('/:id')
-    .get( asyncWrapper(restaurantsController.showRestaurant))
-    .put( isLoggedIn, isAuthor, upload.array('image'), validateRestaurant, asyncWrapper(restaurantsController.updateRestaurant))//post request faked as put request
-    .delete( isLoggedIn, isAuthor, asyncWrapper(restaurantsController.deleteRestaurant));
+router.route( '/:id' )
+    .get( asyncWrapper( restaurantsController.showRestaurant ) )
+    .put( isLoggedIn, isAuthor, upload.array( 'image' ), validateRestaurant, asyncWrapper( restaurantsController.updateRestaurant ) )//post request faked as put request
+    .delete( isLoggedIn, isAuthor, asyncWrapper( restaurantsController.deleteRestaurant ) );
 
 
 //EDIT PAGE
-router.get( '/:id/edit', isLoggedIn, isAuthor, asyncWrapper(restaurantsController.renderEditForm));
+router.get( '/:id/edit', isLoggedIn, isAuthor, asyncWrapper( restaurantsController.renderEditForm ) );
 
 module.exports = router;
