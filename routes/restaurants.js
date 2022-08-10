@@ -1,6 +1,6 @@
 const express = require( 'express' );
 const router = express.Router();
-const asyncWrapper = require( '../utils/asyncWrapper' );
+const asyncWrapper = require( '../utils/AsyncWrapper' );
 const Restaurant = require( '../models/restaurant' );
 const { isLoggedIn, validateRestaurant, isAuthor } = require( '../middleware.js' );
 const restaurantsController = require( '../controllers/restaurants' );
