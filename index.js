@@ -22,11 +22,10 @@ const userRoutes = require( './routes/users' );
 const restaurantRoutes = require( './routes/restaurants' );
 const reviewRoutes = require( './routes/reviews' );
 
-
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yap-restaurants';
-// const dbUrl = 'mongodb://localhost:27017/yap-restaurants';
+// const dbUrl = 'mongodb://localhost:27017/yap-restaurants'; //for development environment
 
-const secret = process.env.SECRET || 'qtip'
+const secret = process.env.SECRET || 'qtip';
 
 const MongoStore = require( 'connect-mongo' );
 
@@ -36,7 +35,6 @@ app.use( methodOverride( '_method' ) );
 
 //here yap-restaurant is our temp db
 mongoose.connect( dbUrl );
-// mongoose.connect( dbUrl )
 
 //helps verify everything is running smoothly
 const db = mongoose.connection; //shorten code
@@ -80,6 +78,15 @@ const sessionConfig = {
 }
 
 app.use( session( sessionConfig ) )
+
+// Both packages are set up with the app.use() middleware, like these lines:
+// app.use(flash());
+// app.use(passport.initialize());
+// which makes their methods available in all routes automatically. Since we mount the rest of the routes on app.js when we use these lines,
+// app.use('/', userRoutes);
+// app.use( '/restaurants', restaurantRoutes );
+// all routes in those files will have access to what was set up on app.js, taking into account what each package implemented behind the scenes. For example, the connect-flash package, as stated in the docs, does the following:
+// "With the flash middleware in place, all requests will have a req.flash() function that can be used for flash messages."
 app.use( flash() );
 
 app.use( passport.initialize() );
@@ -92,28 +99,6 @@ passport.use( new PassportLocal( User.authenticate() ) );
 passport.serializeUser( User.serializeUser() );
 passport.deserializeUser( User.deserializeUser() );
 
-// Both packages are set up with the app.use() middleware, like these lines:
-// app.use(flash());
-// app.use(passport.initialize());
-// which makes their methods available in all routes automatically. Since we mount the rest of the routes on app.js when we use these lines,
-// app.use('/', userRoutes);
-// app.use('/campgrounds', campgroundRoutes)
-// app.use('/campgrounds/:id/reviews',reviewRoutes)
-// all routes in those files will have access to what was set up on app.js, taking into account what each package implemented behind the scenes. For example, the connect-flash package, as stated in the docs, does the following:
-// "With the flash middleware in place, all requests will have a req.flash() function that can be used for flash messages."
-
-//Handle url errors where the restaurant ID does not pass default validation, i.e. length < validLength
-// app.use((err, req, res, next)=>{
-//     const {statusCode = 500} = err;
-
-//     if(err){
-//         req.flash('error', "Restaurant not found!");
-//         return res.redirec t(`/restaurants`);
-//     }
-
-//     if(!err.message) err.message = "Something went wrong!";
-//     res.status(statusCode).render('error',{err});
-// })
 
 //session(sessionConfig)) must be above this
 //middleware for success flash flag
@@ -125,17 +110,10 @@ app.use( ( req, res, next ) => {
     next();
 } )
 
-//below init of .flash()
+//must be below init of .flash(), allows us to use all routes from the passed in variables
 app.use( '/', userRoutes );
 app.use( '/restaurants', restaurantRoutes );
 app.use( '/restaurants/:id/reviews', reviewRoutes );
-
-//tests user login
-app.get( '/user', async ( req, res ) => {
-    const user = new User( { email: 'emai1221l@gmail.com', username: 'use2121r123' } );
-    const newUser = await User.register( user, 'chicken' );
-    res.send( newUser );
-} )
 
 app.get( '/', ( req, res ) => {
     res.render( 'home' );
@@ -144,7 +122,6 @@ app.get( '/', ( req, res ) => {
 app.get( '/error', ( req, res ) => {
     res.render( 'error' );
 } )
-
 
 //'*' means for every path
 app.all( '*', ( req, res, next ) => {

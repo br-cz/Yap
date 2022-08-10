@@ -1,5 +1,6 @@
 const express = require( 'express' );
-//mergeParams allows us to get access to the campground ID, since we get no access to it by default
+
+//mergeParams allows us to get access to the restaurant ID, since we get no access to it by default
 //as routers like to keep their params separate
 const router = express.Router( { mergeParams: true } );
 const asyncWrapper = require( '../utils/AsyncWrapper' );
