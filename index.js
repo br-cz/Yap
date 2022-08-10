@@ -22,8 +22,8 @@ const userRoutes = require( './routes/users' );
 const restaurantRoutes = require( './routes/restaurants' );
 const reviewRoutes = require( './routes/reviews' );
 
-// const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yap-restaurants';
-const dbUrl = 'mongodb://localhost:27017/yap-restaurants'; //for development environment
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yap-restaurants';
+//const dbUrl = 'mongodb://localhost:27017/yap-restaurants'; //for development environment
 
 const secret = process.env.SECRET || 'qtip';
 
@@ -31,7 +31,6 @@ const MongoStore = require( 'connect-mongo' );
 
 // override with POST having ?_method=PUT
 app.use( methodOverride( '_method' ) );
-
 
 //here yap-restaurant is our temp db
 mongoose.connect( dbUrl );
