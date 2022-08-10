@@ -7,8 +7,8 @@ if ( process.env.NODE_ENV !== 'production' ) {
     require( 'dotenv' ).config();
 }
 
-// const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yap-restaurants';
-const dbUrl = 'mongodb://localhost:27017/yap-restaurants';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yap-restaurants';
+// const dbUrl = 'mongodb://localhost:27017/yap-restaurants';
 
 //here yap-restaurant is our temp db
 mongoose.connect( dbUrl );
