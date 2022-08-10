@@ -3,8 +3,15 @@ const Restaurant = require( '../models/restaurant' );
 const cities = require( './cities' );
 const { places, descriptors } = require( './seedHelpers' );
 
+if ( process.env.NODE_ENV !== 'production' ) {
+    require( 'dotenv' ).config();
+}
+
+// const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yap-restaurants';
+const dbUrl = 'mongodb://localhost:27017/yap-restaurants';
+
 //here yap-restaurant is our temp db
-mongoose.connect( 'mongodb://localhost:27017/yap-restaurants' )
+mongoose.connect( dbUrl );
 
 const db = mongoose.connection; //shorten code
 
@@ -30,8 +37,8 @@ const seedDB = async () => {
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam dolores vero perferendis laudantium, consequuntur voluptatibus nulla architecto, sit soluta esse iure sed labore ipsam a cum nihil atque molestiae deserunt!',
             images: [
                 {
-                    url: 'https://res.cloudinary.com/dkq6ijijx/image/upload/v1659804222/Yap/df7cpfnvmlc64kvg8rew.png',
-                    filename: 'Yap/df7cpfnvmlc64kvg8rew',
+                    url: 'https://res.cloudinary.com/dkq6ijijx/image/upload/v1660113618/Yap/os8i217jo2zwxcktwj4e.jpg',
+                    filename: 'Yap/os8i217jo2zwxcktwj4e'
                 }
             ],
             priceRange,
