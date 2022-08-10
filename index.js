@@ -23,7 +23,8 @@ const restaurantRoutes = require( './routes/restaurants' );
 const reviewRoutes = require( './routes/reviews' );
 
 // const dbUrl = process.env.DB_URL;
-const dbUrl = 'mongodb://localhost:27017/yap-restaurants';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yap-restaurants';
+const secret = process.env.SECRET || 'qtip'
 
 const MongoStore = require( 'connect-mongo' );
 
@@ -57,7 +58,7 @@ const store = MongoStore.create( {
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'squirrel'
+        secret
     }
 } );
 
@@ -67,7 +68,7 @@ store.on( "error", function ( e ) {
 
 const sessionConfig = {
     store, //makes our atlas db store our sessions to so it is far more scalable
-    secret: 'secret',
+    secret,
     resave: false,
     saveUninitialized: true, //temp
     cookie: {
