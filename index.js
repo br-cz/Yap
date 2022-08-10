@@ -22,15 +22,18 @@ const userRoutes = require( './routes/users' );
 const restaurantRoutes = require( './routes/restaurants' );
 const reviewRoutes = require( './routes/reviews' );
 
-const dbUrl = process.env.DB_URL;
+// const dbUrl = process.env.DB_URL;
+const dbUrl = 'mongodb://localhost:27017/yap-restaurants';
 
+const MongoStore = require( 'connect-mongo' );
 
 // override with POST having ?_method=PUT
-app.use( methodOverride( '_method' ) )
+app.use( methodOverride( '_method' ) );
+
 
 //here yap-restaurant is our temp db
-// mongoose.connect( 'mongodb://localhost:27017/yap-restaurants' )
-mongoose.connect( dbUrl )
+mongoose.connect( dbUrl );
+// mongoose.connect( dbUrl )
 
 //helps verify everything is running smoothly
 const db = mongoose.connection; //shorten code
@@ -50,7 +53,20 @@ app.set( 'views', path.join( __dirname, 'views' ) )
 app.use( express.static( "public" ) );
 app.use( express.static( path.join( __dirname, 'public' ) ) )
 
+const store = MongoStore.create( {
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'squirrel'
+    }
+} );
+
+store.on( "error", function ( e ) {
+    console.log( "Session Store has an error", e );
+} );
+
 const sessionConfig = {
+    store, //makes our atlas db store our sessions to so it is far more scalable
     secret: 'secret',
     resave: false,
     saveUninitialized: true, //temp
