@@ -158,6 +158,7 @@ app.use( ( err, req, res, next ) => {
     res.status( statusCode ).render( 'error', { err } );
 } )
 
-app.listen( 3000, () => {
+const port = process.env.PORT || 3000 //heroku's preset port
+app.listen( port, () => {
     console.log( "working and listening :)" );
 } )
