@@ -1,6 +1,9 @@
 <% layout('layouts/boilerplate') %>
     <link rel="stylesheet" href="/stylesheets/stars.css">
 
+    <title>
+        <%= restaurant.title%>
+    </title>
     <div class="row">
         <div class="col-6">
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
@@ -130,7 +133,7 @@
         const mbToken = '<%-process.env.MAPBOX_TOKEN %>';
         // Need to stringify because restaurant ID needs to be in quotes, else it throws an error
         //Make sure no spaces in the ejs assignment!!!!!!!!!!!!!!!!
-        const restaurant = <%-JSON.stringify( restaurant ) %>;
+        const restaurant = <%-JSON.stringify( restaurant )%>;
     </script>
 
     <script src="/javascripts/showPageMap.js"></script>

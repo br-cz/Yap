@@ -2,6 +2,7 @@
 
     <div id="map" style="width: 100%; height: 500px"></div>
 
+    <title>Restaurants</title>
     <h1>Restaurants</h1>
 
     <% for(let resto of restaurants){%>
@@ -38,7 +39,7 @@
             <script>
                 const mbToken = '<%-process.env.MAPBOX_TOKEN%>';
                 //we need to map our restaurant data onto features because mapbox is expecting our cluster map data to be in a "features" object
-                const restaurants = { features: <%-JSON.stringify( restaurants ) %>};
+                const restaurants = { features: <% -JSON.stringify( restaurants ) %>};
             </script>
 
             <script src="/javascripts/clusterMap.js"></script>
