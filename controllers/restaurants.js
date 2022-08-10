@@ -64,6 +64,14 @@ module.exports.updateRestaurant = async ( req, res ) => {
     //the assignment returns an array, so we create this array variable and spread them (via ...) amongst the images
     const images = req.files.map( f => ( { url: f.path, filename: f.filename } ) );
     restaurant.images.push( ...images );
+
+    //updates coordinates so the map changes as well
+    const geoData = await geocoder.forwardGeocode( {
+        query: req.body.restaurant.location,
+        limit: 1
+    } ).send()
+    restaurant.geometry = geoData.body.features[0].geometry;
+
     await restaurant.save()
 
     if ( req.body.deleteImages ) {
